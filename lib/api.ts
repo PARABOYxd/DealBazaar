@@ -1,34 +1,62 @@
 import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
 
+export class ApiError extends Error {
+  statusCode: number;
+  data: any;
+
+  constructor(message: string, statusCode: number, data: any = null) {
+    super(message);
+    this.name = 'ApiError';
+    this.statusCode = statusCode;
+    this.data = data;
+  }
+}
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';
 
 class ApiService {
   private async fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        headers: {
+      const requestOptions: RequestInit = {
+        ...options,
+      };
+
+      if (!(options?.body instanceof FormData)) {
+        requestOptions.headers = {
           'Content-Type': 'application/json',
           ...options?.headers,
-        },
-        ...options,
-      });
+        };
+      }
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, requestOptions);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let errorData = null;
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          // If response is not JSON, or empty
+        }
+        throw new ApiError(
+          errorData?.message || `HTTP error! status: ${response.status}`,
+          response.status,
+          errorData
+        );
       }
 
       return await response.json();
     } catch (error) {
       console.error(`API Error for ${endpoint}:`, error);
-      return {
-        success: false,
-        data: (endpoint.includes('/categories') ? [] : 
-               endpoint.includes('/products') ? { products: [], total: 0, pages: 0 } :
-               endpoint.includes('/testimonials') ? [] :
-               endpoint.includes('/blog') ? { posts: [], total: 0, pages: 0 } :
-               {}) as T,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      };
+      if (error instanceof ApiError) {
+        throw error; // Re-throw custom API errors
+      } else {
+        // Wrap other errors in a generic ApiError
+        throw new ApiError(
+          error instanceof Error ? error.message : 'Unknown error',
+          500, // Internal Server Error for unexpected errors
+          null
+        );
+      }
     }
   }
 
@@ -78,10 +106,10 @@ class ApiService {
       formData.append(`image${index}`, file);
     });
 
-    return fetch(`${API_BASE_URL}/upload/images`, {
+    return this.fetchApi('/upload/images', {
       method: 'POST',
       body: formData,
-    }).then(res => res.json());
+    });
   }
 
   // Testimonials

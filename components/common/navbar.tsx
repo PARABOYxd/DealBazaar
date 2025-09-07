@@ -25,17 +25,7 @@ interface NavbarProps {
 
 export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const openWhatsApp = () => {
     const message = encodeURIComponent('Hello! I want to sell my electronics/furniture items.');
@@ -52,9 +42,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
       animate={{ y: 0 }}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
+        'bg-white/95 backdrop-blur-md shadow-lg'
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,13 +50,18 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/images/logo.png"
+              src="https://placehold.co/40x40/png?text=EF"
               alt="ElectroFurni Pickup"
               width={40}
               height={40}
               className="w-auto h-8"
             />
-            <span className="text-xl font-bold text-gray-900">
+            <span
+              className={cn(
+                'text-xl font-bold transition-colors duration-300',
+                'text-gray-900'
+              )}
+            >
               ElectroFurni
             </span>
           </Link>
@@ -80,10 +73,10 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'text-sm font-medium transition-colors duration-200 relative',
-                  pathname === item.href
-                    ? 'text-blue-600'
-                    : 'text-gray-700 hover:text-blue-600'
+                  'text-sm font-medium transition-colors duration-200 relative text-gray-700 hover:text-blue-600',
+                  {
+                    'text-blue-600': pathname === item.href,
+                  }
                 )}
               >
                 {item.name}
@@ -104,7 +97,10 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
               onClick={openWhatsApp}
               variant="outline"
               size="sm"
-              className="flex items-center gap-2"
+              className={cn(
+                'flex items-center gap-2 transition-colors duration-300',
+                'text-gray-800 border-gray-300 hover:bg-gray-100'
+              )}
             >
               <MessageCircle className="w-4 h-4" />
               WhatsApp
@@ -112,7 +108,10 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
             <Button
               onClick={makeCall}
               size="sm"
-              className="flex items-center gap-2"
+              className={cn(
+                'flex items-center gap-2 transition-colors duration-300',
+                'bg-blue-600 text-white hover:bg-blue-700'
+              )}
             >
               <Phone className="w-4 h-4" />
               Call Now
@@ -123,7 +122,10 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className={cn(
+              'md:hidden transition-colors duration-300',
+              'text-gray-800 hover:bg-gray-100'
+            )}
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

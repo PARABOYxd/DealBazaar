@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Get the best prices for your old electronics and furniture with free doorstep pickup service in Mumbai.',
     images: [
       {
-        url: '/images/og-default.jpg',
+        url: 'https://placehold.co/1200x630/png?text=ElectroFurni+Pickup',
         width: 1200,
         height: 630,
         alt: 'ElectroFurni Pickup - Electronics and Furniture Pickup Service',
@@ -37,22 +37,19 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ElectroFurni Pickup - Best Prices for Electronics & Furniture',
     description: 'Get the best prices for your old electronics and furniture with free doorstep pickup service in Mumbai.',
-    images: ['/images/og-default.jpg'],
+    images: ['https://placehold.co/1200x630/png?text=ElectroFurni+Pickup'],
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || 'your-google-verification-code',
   },
 };
 
 // Static contact info - in production, this would come from your Java backend
 const contactInfo = {
-  phone: '+919876543210',
-  whatsapp: '919876543210',
-  email: 'info@electrofurni.com',
-  address: '123 Business Street, Andheri East',
-  city: 'Mumbai',
-  state: 'Maharashtra',
-  pincode: '400093',
+  phone: process.env.NEXT_PUBLIC_PHONE_NUMBER || '+919876543210',
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210',
+  email: process.env.NEXT_PUBLIC_EMAIL || 'info@electrofurni.com',
+  address: process.env.NEXT_PUBLIC_ADDRESS || '123 Business Street, Andheri East, Mumbai, Maharashtra 400093',
 };
 
 export default function RootLayout({
@@ -76,13 +73,13 @@ export default function RootLayout({
               whatsappNumber={contactInfo.whatsapp}
               phoneNumber={contactInfo.phone}
             />
-            
+
             <main className="pt-16">
               {children}
             </main>
-            
+
             <Footer contactInfo={contactInfo} />
-            
+
             <FloatingActions
               whatsappNumber={contactInfo.whatsapp}
               phoneNumber={contactInfo.phone}

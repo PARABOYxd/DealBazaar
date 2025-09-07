@@ -32,8 +32,8 @@ export default function Home() {
   const products = Array.isArray(productsData?.data?.products) ? productsData.data.products : [];
   const testimonials = Array.isArray(testimonialsData?.data) ? testimonialsData.data : [];
 
-  const whatsappNumber = '919876543210';
-  const phoneNumber = '+919876543210';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210';
+  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '+919876543210';
 
   const openWhatsApp = () => {
     const message = encodeURIComponent('Hello! I want to sell my electronics/furniture items. Can you help me get the best price?');
@@ -68,14 +68,14 @@ export default function Home() {
       <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 text-white overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.pexels.com/photos/4246120/pexels-photo-4246120.jpeg"
+            src="https://thumbs.dreamstime.com/b/vintage-outdated-electronics-pieces-large-amounts-broken-old-vintage-electronics-pile-covered-wires-debris-301403180.jpg"
             alt="Electronics and furniture"
             fill
             className="object-cover opacity-20"
             priority
           />
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -92,31 +92,31 @@ export default function Home() {
                 <br />& <span className="text-green-400">Furniture</span> Today
               </h1>
               <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
-                Get instant quotes and best market prices for your old items. 
+                Get instant quotes and best market prices for your old items.
                 Free doorstep pickup service across Mumbai.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 text-lg font-semibold"
                 onClick={openWhatsApp}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 Get Quote on WhatsApp
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 text-lg font-semibold"
+                className="border-white text-black hover:bg-white hover:text-blue-900 px-8 py-4 text-lg font-semibold"
                 onClick={makeCall}
               >
                 <Phone className="w-5 h-5 mr-2" />
                 Call Now
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="secondary"
                 asChild
                 className="px-8 py-4 text-lg font-semibold"
@@ -350,9 +350,8 @@ export default function Home() {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-4 h-4 ${
-                              i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                            }`}
+                            className={`w-4 h-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                              }`}
                           />
                         ))}
                       </div>
@@ -392,22 +391,22 @@ export default function Home() {
               Ready to Sell Your Items?
             </h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Get instant quotes and schedule free pickup today. 
+              Get instant quotes and schedule free pickup today.
               Join thousands of satisfied customers across Mumbai.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 text-lg font-semibold"
                 onClick={openWhatsApp}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 WhatsApp Now
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold"
+                className="border-white text-black hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold"
                 asChild
               >
                 <Link href="/pickup-request">

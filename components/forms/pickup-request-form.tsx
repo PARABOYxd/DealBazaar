@@ -5,13 +5,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { Plus, X, Upload, MessageCircle } from 'lucide-react';
+import { Plus, X, Upload, MessageCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiService } from '@/lib/api';
 import { PickupRequest } from '@/types';
 
@@ -42,6 +43,7 @@ interface PickupRequestFormProps {
 export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]);
 
   const {
@@ -108,6 +110,7 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
 
   const onSubmit = async (data: PickupFormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
     
     try {
       // Upload images first if any
@@ -131,9 +134,12 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
         setSubmitSuccess(true);
         reset();
         setImages([]);
+      } else {
+        setSubmitError(response.message || 'Failed to submit request. Please try again.');
       }
     } catch (error) {
       console.error('Form submission error:', error);
+      setSubmitError('An unexpected error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
@@ -151,25 +157,20 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
         animate={{ opacity: 1, scale: 1 }}
         className="text-center py-12"
       >
-        <div className="max-w-md mx-auto">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Request Submitted Successfully!</h3>
-          <p className="text-gray-600 mb-6">
+        <Alert variant="default" className="max-w-md mx-auto mb-6">
+          <AlertTitle>Request Submitted Successfully!</AlertTitle>
+          <AlertDescription>
             We've received your pickup request. Our team will contact you within 24 hours to confirm the details.
-          </p>
-          <div className="space-y-3">
-            <Button onClick={() => setSubmitSuccess(false)}>
-              Submit Another Request
-            </Button>
-            <Button variant="outline" onClick={openWhatsApp} className="w-full">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              Contact on WhatsApp
-            </Button>
-          </div>
+          </AlertDescription>
+        </Alert>
+        <div className="space-y-3 max-w-md mx-auto">
+          <Button onClick={() => setSubmitSuccess(false)}>
+            Submit Another Request
+          </Button>
+          <Button variant="outline" onClick={openWhatsApp} className="w-full">
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Contact on WhatsApp
+          </Button>
         </div>
       </motion.div>
     );
@@ -191,6 +192,13 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
 
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {submitError && (
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{submitError}</AlertDescription>
+                </Alert>
+            )}
             {/* Personal Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

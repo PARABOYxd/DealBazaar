@@ -61,7 +61,7 @@ class ApiService {
     search?: string;
     page?: number;
     size?: number;
-  }): Promise<ApiResponse<{ products: Product[]; total: number; pages: number; size: number }>> {
+  }): Promise<ApiResponse<Product[]>> {
     const params = new URLSearchParams();
 
     if (filters) {

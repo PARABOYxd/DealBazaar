@@ -5,10 +5,8 @@ export interface Product {
   description: string;
   category: string;
   images: string[];
-  estimatedPrice: {
-    min: number;
-    max: number;
-  };
+  estimatePriceMin: number;
+  estimatePriceMax: number;
   condition: 'excellent' | 'good' | 'fair' | 'poor';
   brand?: string;
   model?: string;

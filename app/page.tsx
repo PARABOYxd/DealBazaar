@@ -14,13 +14,13 @@ import { generateSEO } from '@/lib/seo';
 
 export default function Home() {
   const { data: categoriesData } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', { page: 1, size: 10 }],
     queryFn: () => apiService.getCategories(),
   });
 
   const { data: productsData } = useQuery({
     queryKey: ['featured-products'],
-    queryFn: () => apiService.getProducts({ limit: 6 }),
+    queryFn: () => apiService.getProducts({ size: 6, page: 1 }),
   });
 
   const { data: testimonialsData } = useQuery({
@@ -29,7 +29,7 @@ export default function Home() {
   });
 
   const categories = categoriesData?.data || [];
-    const products = productsData?.data?.products || [];
+  const products = productsData?.data || [];
   const testimonials = testimonialsData?.data || [];
 
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210';
@@ -179,14 +179,14 @@ export default function Home() {
               >
                 <Link href={`/products?category=${category.slug}`}>
                   <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-6 text-center space-y-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <CardContent className="p-6 text-center space-y-2"> {/* space-y-2 for smaller margin */}
+                      <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
                         <Image
                           src={category.image}
                           alt={category.name}
-                          width={32}
-                          height={32}
-                          className="w-8 h-8 text-white"
+                          width={96}
+                          height={96}
+                          className="w-24 h-24 rounded-full object-cover border border-gray-200"
                         />
                       </div>
                       <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
@@ -195,6 +195,8 @@ export default function Home() {
                       <p className="text-sm text-gray-600">{category.productCount} items</p>
                     </CardContent>
                   </Card>
+
+
                 </Link>
               </motion.div>
             ))}
@@ -229,9 +231,11 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
             {products.map((product, index) => (
+              console.log("heeelllo", product),
               <ProductCard
-                key={product.id}
+                key={product.slug}
                 product={product}
                 whatsappNumber={whatsappNumber}
               />

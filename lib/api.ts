@@ -1,9 +1,9 @@
 import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class ApiService {
-  private async fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
+  private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T) {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
@@ -13,22 +13,42 @@ class ApiService {
         ...options,
       });
 
+      // try to parse JSON (backend returns { status, data, pagination, message, error })
+      const json = await response.json().catch(() => null);
+
+      // If server returned non-JSON but non-ok status, throw
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errMsg = (json && (json as any).message) || response.statusText || `HTTP ${response.status}`;
+        throw new Error(errMsg);
       }
 
-      return await response.json();
+      // If JSON exists, return it as-is (assumes it matches your ApiResponse shape)
+      if (json) return json as ApiResponse<T>;
+
+      // If no JSON (rare), return a synthetic success shape
+      return {
+        status: response.status,
+        data: (fallbackData ?? ({} as T)),
+        pagination: undefined,
+        message: '',
+        error: '',
+      } as unknown as ApiResponse<T>;
     } catch (error) {
       console.error(`API Error for ${endpoint}:`, error);
+
+      // return a fallback object consistent with your backend shape
       return {
-        success: false,
-        data: (endpoint.includes('/categories') ? [] : 
-               endpoint.includes('/products') ? { products: [], total: 0, pages: 0 } :
-               endpoint.includes('/testimonials') ? [] :
-               endpoint.includes('/blog') ? { posts: [], total: 0, pages: 0 } :
-               {}) as T,
+        status: 500,
+        data: (fallbackData ?? (Array.isArray(fallbackData) ? [] : ({} as T))),
+        pagination: {
+          pageNumber: 0,
+          pageSize: 0,
+          count: 0,
+          totalElements: 0,
+        },
+        message: '',
         error: error instanceof Error ? error.message : 'Unknown error',
-      };
+      } as unknown as ApiResponse<T>;
     }
   }
 
@@ -40,10 +60,10 @@ class ApiService {
     condition?: string;
     search?: string;
     page?: number;
-    limit?: number;
-  }): Promise<ApiResponse<{ products: Product[]; total: number; pages: number }>> {
+    size?: number;
+  }): Promise<ApiResponse<{ products: Product[]; total: number; pages: number; size: number }>> {
     const params = new URLSearchParams();
-    
+
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
@@ -60,9 +80,18 @@ class ApiService {
   }
 
   // Categories
-  async getCategories(): Promise<ApiResponse<Category[]>> {
-    return this.fetchApi('/categories');
+  async getCategories(params?: { page?: number; size?: number }): Promise<ApiResponse<Category[]>> {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      if (params.page !== undefined) searchParams.append('page', params.page.toString());
+      if (params.size !== undefined) searchParams.append('size', params.size.toString());
+    }
+
+    const query = searchParams.toString() ? `?${searchParams.toString()}` : '';
+    return this.fetchApi(`/category${query}`);
   }
+
 
   // Pickup Requests
   async createPickupRequest(request: Omit<PickupRequest, 'id'>): Promise<ApiResponse<PickupRequest>> {
@@ -104,7 +133,7 @@ class ApiService {
     tag?: string;
   }): Promise<ApiResponse<{ posts: BlogPost[]; total: number; pages: number }>> {
     const searchParams = new URLSearchParams();
-    
+
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {

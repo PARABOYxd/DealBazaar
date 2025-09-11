@@ -48,7 +48,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
           <Link href={`/product/${product.slug}`}>
             <div className="relative w-full h-full bg-gray-100">
               <Image
-                src={product.images[0] || '/images/placeholder-product.jpg'}
+                src={(product.images && product.images[0]) || '/images/placeholder-product.jpg'}
                 alt={product.name}
                 fill
                 className={cn(
@@ -63,7 +63,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
               )}
             </div>
           </Link>
-          
+
           {/* Overlay Actions */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
             <div className="flex space-x-2">
@@ -105,14 +105,14 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
           </Button>
 
           {/* Condition Badge */}
-          <Badge
+          {/* <Badge
             className={cn(
               "absolute top-2 left-2",
               conditionColors[product.condition]
             )}
           >
             {product.condition.charAt(0).toUpperCase() + product.condition.slice(1)}
-          </Badge>
+          </Badge> */}
         </div>
 
         <CardContent className="p-4">
@@ -138,7 +138,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
 
             <div className="flex items-center justify-between pt-2">
               <div className="text-lg font-bold text-green-600">
-                ₹{product.estimatedPrice.min.toLocaleString()} - ₹{product.estimatedPrice.max.toLocaleString()}
+                ₹{product.estimatePriceMin.toLocaleString()} - ₹{product.estimatePriceMax.toLocaleString()}
               </div>
               <Button
                 size="sm"

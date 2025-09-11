@@ -138,8 +138,8 @@ export function generateProductSchema(product: Product) {
     offers: {
       '@type': 'Offer',
       priceCurrency: 'INR',
-      lowPrice: product.estimatedPrice.min,
-      highPrice: product.estimatedPrice.max,
+      lowPrice: product.estimatePriceMin,
+      highPrice: product.estimatePriceMax,
       availability: 'https://schema.org/InStock',
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/product/${product.slug}`,
     },

@@ -29,8 +29,8 @@ export default function Home() {
   });
 
   const categories = categoriesData?.data || [];
-  const products = Array.isArray(productsData?.data?.products) ? productsData.data.products : [];
-  const testimonials = Array.isArray(testimonialsData?.data) ? testimonialsData.data : [];
+    const products = productsData?.data?.products || [];
+  const testimonials = testimonialsData?.data || [];
 
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210';
   const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '+919876543210';

@@ -7,7 +7,7 @@ interface SEOProps {
   keywords?: string;
   image?: string;
   url?: string;
-  type?: 'website' | 'article' | 'product';
+  type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
 }
@@ -28,7 +28,7 @@ export function generateSEO({
   const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
   const fullImage = image.startsWith('http') ? image : `${baseUrl}${image}`;
 
-  return {
+  const metadata: Metadata = {
     title: fullTitle,
     description,
     keywords,
@@ -56,13 +56,19 @@ export function generateSEO({
     alternates: {
       canonical: fullUrl,
     },
-    ...(type === 'article' && {
-      other: {
-        'article:published_time': publishedTime,
-        'article:modified_time': modifiedTime,
-      },
-    }),
   };
+
+  if (type === 'article') {
+    metadata.other = {};
+    if (publishedTime) {
+      metadata.other['article:published_time'] = publishedTime;
+    }
+    if (modifiedTime) {
+      metadata.other['article:modified_time'] = modifiedTime;
+    }
+  }
+
+  return metadata;
 }
 
 export function generateProductSEO(product: Product): Metadata {
@@ -72,7 +78,7 @@ export function generateProductSEO(product: Product): Metadata {
     keywords: `${product.name}, ${product.category}, ${product.brand}, sell electronics, furniture pickup`,
     image: product.images[0],
     url: `/product/${product.slug}`,
-    type: 'product',
+    type: 'website',
   });
 }
 

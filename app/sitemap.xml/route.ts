@@ -20,9 +20,9 @@ export async function GET() {
   let blogPosts: any[] = [];
 
   try {
-    const productsResponse = await apiService.getProducts({ limit: 1000 });
+    const productsResponse = await apiService.getProducts({ size: 1000 });
     if (productsResponse.success) {
-      products = productsResponse.data.products;
+      products = productsResponse.data;
     }
 
     const blogResponse = await apiService.getBlogPosts({ limit: 1000 });

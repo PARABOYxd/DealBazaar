@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Phone, MessageCircle } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -49,20 +49,14 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <Image
-              src="https://placehold.co/40x40/png?text=EF"
-              alt="ElectroFurni Pickup"
-              width={40}
-              height={40}
-              className="w-auto h-8"
-            />
+            <ShoppingBag className="w-8 h-8 text-blue-600" />
             <span
               className={cn(
                 'text-xl font-bold transition-colors duration-300',
                 'text-gray-900'
               )}
             >
-              ElectroFurni
+              DealBazaar
             </span>
           </Link>
 
@@ -93,6 +87,9 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
 
           {/* Contact Buttons */}
           <div className="hidden md:flex items-center space-x-3">
+            <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
+              <Link href="/rate-list">Check Rate List</Link>
+            </Button>
             <Button
               onClick={openWhatsApp}
               variant="outline"
@@ -107,10 +104,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
             </Button>
             <Button
               onClick={makeCall}
+              variant="outline"
               size="sm"
               className={cn(
                 'flex items-center gap-2 transition-colors duration-300',
-                'bg-blue-600 text-white hover:bg-blue-700'
+                'border-gray-800 text-gray-800 hover:bg-gray-100'
               )}
             >
               <Phone className="w-4 h-4" />
@@ -119,17 +117,22 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
           </div>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              'md:hidden transition-colors duration-300',
-              'text-gray-800 hover:bg-gray-100'
-            )}
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </Button>
+          <div className="flex items-center gap-2 md:hidden">
+            <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
+                <Link href="/rate-list">Check Rate List</Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'transition-colors duration-300',
+                'text-gray-800 hover:bg-gray-100'
+              )}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </Button>
+          </div>
         </div>
       </div>
 

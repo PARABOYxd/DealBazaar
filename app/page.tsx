@@ -1,8 +1,9 @@
 'use client';
 
+import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, Zap, Shield, Clock, MessageCircle, Phone } from 'lucide-react';
+import { ArrowRight, Star, Zap, Shield, Clock, MessageCircle, Phone, Quote } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -11,8 +12,35 @@ import { Badge } from '@/components/ui/badge';
 import { ProductCard } from '@/components/cards/product-card';
 import { apiService } from '@/lib/api';
 import { generateSEO } from '@/lib/seo';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Autoplay from "embla-carousel-autoplay";
+import { useInView } from 'react-intersection-observer';
 
 export default function Home() {
+  const plugin = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
+
+  const [api, setApi] = React.useState<CarouselApi>();
+  const { ref, inView } = useInView();
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+    if (inView) {
+      api.plugins().autoplay?.play();
+    } else {
+      api.plugins().autoplay?.stop();
+    }
+  }, [api, inView]);
+
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', { page: 1, size: 10 }],
     queryFn: () => apiService.getCategories(),
@@ -25,7 +53,7 @@ export default function Home() {
 
   const { data: testimonialsData } = useQuery({
     queryKey: ['testimonials'],
-    queryFn: () => apiService.getTestimonials(3),
+    queryFn: () => apiService.getTestimonials(9),
   });
 
   const categories = categoriesData?.data || [];
@@ -42,6 +70,13 @@ export default function Home() {
 
   const makeCall = () => {
     window.open(`tel:${phoneNumber}`, '_self');
+  };
+
+  const getInitials = (name: string) => {
+    const names = name.split(' ');
+    const firstName = names[0] ?? '';
+    const lastName = names.length > 1 ? names[names.length - 1] : '';
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
 
   const benefits = [
@@ -150,71 +185,72 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               What We Buy
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We accept a wide range of electronics and furniture items in any condition
+              We accept a wide range of electronics and furniture items in any condition.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {Array.isArray(categories) && categories.slice(0, 8).map((category, index) => (
+            {Array.isArray(categories) && categories.slice(0, 7).map((category, index) => (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="group"
               >
-                <Link href={`/products?category=${category.slug}`}>
-                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-6 text-center space-y-2"> {/* space-y-2 for smaller margin */}
-                      <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          width={96}
-                          height={96}
-                          className="w-24 h-24 rounded-full object-cover border border-gray-200"
-                        />
-                      </div>
-                      <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                <Link href={`/products?category=${category.slug}`} className="group block">
+                  <Card className="relative h-64 overflow-hidden rounded-xl shadow-lg">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/20" />
+                    <CardContent className="absolute bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-sm">
+                      <h3 className="font-bold text-gray-900 text-lg">
                         {category.name}
                       </h3>
-                      <p className="text-sm text-gray-600">{category.productCount} items</p>
                     </CardContent>
                   </Card>
-
-
                 </Link>
               </motion.div>
             ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Button asChild variant="outline" size="lg">
-              <Link href="/products">
-                View All Categories
-                <ArrowRight className="w-4 h-4 ml-2" />
+            {/* View All Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.7 }}
+            >
+              <Link href="/products" className="group block">
+                <Card className="h-64 bg-blue-600 rounded-xl shadow-lg flex flex-col items-center justify-center text-white hover:bg-blue-700 transition-colors duration-300">
+                  <ArrowRight className="w-12 h-12 mb-4 transition-transform duration-300 group-hover:translate-x-2" />
+                  <h3 className="font-bold text-xl">
+                    View All
+                  </h3>
+                  <p className="text-sm">Categories</p>
+                </Card>
               </Link>
-            </Button>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-gray-50">
+      {/* <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -250,7 +286,7 @@ export default function Home() {
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* How It Works */}
       <section className="py-16 bg-white">
@@ -322,61 +358,60 @@ export default function Home() {
 
       {/* Testimonials */}
       {testimonials.length > 0 && (
-        <section className="py-16 bg-gray-50">
+        <section ref={ref} className="py-20 bg-gray-50 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-12"
+              className="text-center mb-16"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                What Our Customers Say
+                Trusted by Thousands
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Join thousands of satisfied customers who got the best prices for their items
+                Our customers love the seamless experience and the great value we provide.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={testimonial.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2 }}
-                >
-                  <Card className="h-full border-0 shadow-md">
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-1 mb-4">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                              }`}
-                          />
-                        ))}
-                      </div>
-                      <p className="text-gray-600 mb-4 italic">"{testimonial.comment}"</p>
-                      <div className="flex items-center space-x-3">
-                        <Image
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <div>
-                          <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                          <div className="text-sm text-gray-500">{testimonial.location}</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+            <Carousel
+              setApi={setApi}
+              plugins={[plugin.current]}
+              className="w-full max-w-6xl mx-auto"
+            >
+              <CarouselContent>
+                {testimonials.map((testimonial, index) => (
+                  <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/3">
+                    <div className="p-4">
+                      <Card className="h-full bg-white rounded-xl shadow-lg overflow-hidden">
+                        <CardContent className="p-8 flex flex-col justify-between h-full">
+                          <div className="flex-grow">
+                            <Quote className="w-8 h-8 text-blue-500 mb-4" />
+                            <p className="text-gray-700 italic text-lg mb-6">
+                              "{testimonial.comment}"
+                            </p>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <Avatar>
+                              <AvatarImage src={testimonial.image} alt={testimonial.name} />
+                              <AvatarFallback>{getInitials(testimonial.name)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-semibold text-gray-900">
+                                {testimonial.name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {testimonial.location}
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </div>
         </section>
       )}

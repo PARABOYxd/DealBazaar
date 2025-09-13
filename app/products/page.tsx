@@ -19,7 +19,7 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 1500);
 
-  const searchTermToUse = debouncedSearchTerm.length >= 3 ? debouncedSearchTerm : '';
+  const searchTermToUse = debouncedSearchTerm.length >= 2 ? debouncedSearchTerm : '';
 
   const {
     data,

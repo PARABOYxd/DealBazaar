@@ -16,6 +16,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -201,51 +203,46 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {Array.isArray(categories) && categories.slice(0, 7).map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link href={`/products?category=${category.slug}`} className="group block">
-                  <Card className="relative h-64 overflow-hidden rounded-xl shadow-lg">
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black/20" />
-                    <CardContent className="absolute bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-sm">
-                      <h3 className="font-bold text-gray-900 text-lg">
-                        {category.name}
-                      </h3>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
-            {/* View All Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.7 }}
-            >
-              <Link href="/products" className="group block">
-                <Card className="h-64 bg-blue-600 rounded-xl shadow-lg flex flex-col items-center justify-center text-white hover:bg-blue-700 transition-colors duration-300">
-                  <ArrowRight className="w-12 h-12 mb-4 transition-transform duration-300 group-hover:translate-x-2" />
-                  <h3 className="font-bold text-xl">
-                    View All
-                  </h3>
-                  <p className="text-sm">Categories</p>
-                </Card>
-              </Link>
-            </motion.div>
-          </div>
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[plugin.current]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {Array.isArray(categories) && categories.slice(0, 7).map((category, index) => (
+                <CarouselItem key={category.id} className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link href={`/products?category=${category.slug}`} className="group block">
+                      <Card className="relative h-64 overflow-hidden rounded-xl shadow-lg">
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          fill
+                          className="object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-black/20" />
+                        <CardContent className="absolute bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-sm">
+                          <h3 className="font-bold text-gray-900 text-lg">
+                            {category.name}
+                          </h3>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+              
+            </CarouselContent>
+
+          </Carousel>
         </div>
       </section>
 

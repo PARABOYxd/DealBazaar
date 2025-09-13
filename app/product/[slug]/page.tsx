@@ -9,6 +9,15 @@ interface ProductPageProps {
   };
 }
 
+export async function generateStaticParams() {
+  const productsData = await apiService.getProducts(); // Assuming getProducts fetches all products
+  const products = productsData?.data || [];
+
+  return products.map((product: { slug: string }) => ({
+    slug: product.slug,
+  }));
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = params;
   const productData = await apiService.getProductBySlug(slug);

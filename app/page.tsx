@@ -167,7 +167,7 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {categories.slice(0, 8).map((category, index) => (
+            {Array.isArray(categories) && categories.slice(0, 8).map((category, index) => (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -230,9 +230,9 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            {products.map((product, index) => (
+            {Array.isArray(products) && products.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}

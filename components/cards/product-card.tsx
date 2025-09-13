@@ -90,7 +90,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
           </div>
 
           {/* Favorite Button */}
-          <Button
+          {/* <Button
             variant="ghost"
             size="sm"
             className="absolute top-2 right-2 bg-white/80 hover:bg-white"
@@ -102,7 +102,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
                 isLiked ? "fill-red-500 text-red-500" : "text-gray-600"
               )}
             />
-          </Button>
+          </Button> */}
 
           {/* Condition Badge */}
           {/* <Badge

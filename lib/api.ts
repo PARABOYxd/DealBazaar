@@ -58,7 +58,7 @@ class ApiService {
     minPrice?: number;
     maxPrice?: number;
     condition?: string;
-    search?: string;
+    searchParam?: string;
     page?: number;
     size?: number;
   }): Promise<ApiResponse<Product[]>> {
@@ -122,7 +122,7 @@ class ApiService {
   // FAQ
   async getFAQs(category?: string): Promise<ApiResponse<FAQ[]>> {
     const params = category ? `?category=${category}` : '';
-    return this.fetchApi(`/faqs${params}`);
+    return this.fetchApi(`/faqs${params}`, undefined, []);
   }
 
   // Blog

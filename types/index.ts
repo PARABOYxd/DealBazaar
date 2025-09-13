@@ -92,9 +92,17 @@ export interface ContactInfo {
   };
 }
 
+export interface Pagination {
+  pageNumber: number;
+  pageSize: number;
+  count: number;
+  totalElements: number;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message?: string;
   error?: string;
+  pagination?: Pagination;
 }

@@ -68,13 +68,13 @@ export function Footer({ contactInfo }: FooterProps) {
               Get the best prices for your items with free doorstep collection.
             </p>
             <div className="flex space-x-3">
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white" aria-label="Facebook">
                 <Facebook className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white" aria-label="Instagram">
                 <Instagram className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white" aria-label="Twitter">
                 <Twitter className="w-5 h-5" />
               </Button>
             </div>

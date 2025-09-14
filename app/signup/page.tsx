@@ -8,10 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 // Import step components
-import { PhoneInput } from '@/components/signup/phone-input';
-import { OtpInput } from '@/components/signup/otp-input';
-import { LocationInput } from '@/components/signup/location-input';
-import { UserDetailsForm } from '@/components/signup/user-details-form';
+import dynamic from 'next/dynamic';
+
+const PhoneInput = dynamic(() => import('@/components/signup/phone-input').then(mod => mod.PhoneInput));
+const OtpInput = dynamic(() => import('@/components/signup/otp-input').then(mod => mod.OtpInput));
+const LocationInput = dynamic(() => import('@/components/signup/location-input').then(mod => mod.LocationInput));
+const UserDetailsForm = dynamic(() => import('@/components/signup/user-details-form').then(mod => mod.UserDetailsForm));
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

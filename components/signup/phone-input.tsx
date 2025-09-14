@@ -59,7 +59,7 @@ export function PhoneInput({ onNext }: PhoneInputProps) {
           </FormItem>
         )}
       />
-      <Button type="button" onClick={handleNext} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-3">Send OTP</Button> {/* type="button" to prevent form submission */}
+      <Button type="button" onClick={handleNext} className="w-full bg-blue-700 hover:bg-blue-800 text-white px-3">Send OTP</Button> {/* type="button" to prevent form submission */}
       <Button type="button" onClick={handleSkip} variant="outline" className="w-full px-3 mt-2">Skip</Button>
     </div>
   );

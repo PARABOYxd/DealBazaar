@@ -7,6 +7,7 @@ import { Footer } from '@/components/common/footer';
 import { FloatingActions } from '@/components/common/floating-actions';
 import { Schema } from '@/components/ui/schema';
 import { generateLocalBusinessSchema } from '@/lib/seo';
+import { LayoutWrapper } from '@/components/common/layout-wrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -72,21 +73,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProvider>
           <div className="min-h-screen bg-gray-50">
-            <Navbar
-              whatsappNumber={contactInfo.whatsapp}
-              phoneNumber={contactInfo.phone}
-            />
-
-            <main className="pt-16">
+            <LayoutWrapper contactInfo={contactInfo}>
               {children}
-            </main>
-
-            <Footer contactInfo={contactInfo} />
-
-            <FloatingActions
-              whatsappNumber={contactInfo.whatsapp}
-              phoneNumber={contactInfo.phone}
-            />
+            </LayoutWrapper>
           </div>
         </QueryProvider>
       </body>

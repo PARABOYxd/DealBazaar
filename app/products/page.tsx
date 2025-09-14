@@ -136,7 +136,7 @@ export default function ProductsPage() {
                 </div>
               )}
               {!hasNextPage && products.length > 0 && (
-                <p className="text-gray-500">You've reached the end of the list.</p>
+                <p className="text-gray-500">You&apos;ve reached the end of the list.</p>
               )}
             </div>
           </>

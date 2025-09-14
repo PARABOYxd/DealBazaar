@@ -104,13 +104,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 text-white overflow-hidden">
         <div className="absolute inset-0">
-          <Image
-            src="https://thumbs.dreamstime.com/b/vintage-outdated-electronics-pieces-large-amounts-broken-old-vintage-electronics-pile-covered-wires-debris-301403180.jpg"
-            alt="Electronics and furniture"
-            fill
-            className="object-cover opacity-20"
-            priority
-          />
+
+
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -186,7 +181,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Rate List Section (Commented Out) */}
+
       <section className="py-20 bg-white sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -239,7 +235,7 @@ export default function Home() {
                   </motion.div>
                 </CarouselItem>
               ))}
-              
+
             </CarouselContent>
 
           </Carousel>
@@ -385,7 +381,7 @@ export default function Home() {
                           <div className="flex-grow">
                             <Quote className="w-8 h-8 text-blue-500 mb-4" />
                             <p className="text-gray-700 italic text-lg mb-6">
-                              "{testimonial.comment}"
+                              &quot;{testimonial.comment}&quot;
                             </p>
                           </div>
                           <div className="flex items-center space-x-4">

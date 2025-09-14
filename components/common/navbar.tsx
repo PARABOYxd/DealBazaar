@@ -87,8 +87,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
 
           {/* Contact Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
+            {/* <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
               <Link href="/rate-list">Check Rate List</Link>
+            </Button> */}
+            <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
+              <Link href="/signup">Sign Up</Link>
             </Button>
             <Button
               onClick={openWhatsApp}
@@ -118,8 +121,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
-            <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
+            {/* <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
                 <Link href="/rate-list">Check Rate List</Link>
+            </Button> */}
+            <Button variant="default" size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-700">
+                <Link href="/signup">Sign Up</Link>
             </Button>
             <Button
               variant="ghost"

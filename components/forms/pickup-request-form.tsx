@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiService } from '@/lib/api';
 import { PickupRequest } from '@/types';
+import Image from 'next/image';
 
 const pickupSchema = z.object({
   customerName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -160,7 +161,7 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
         <Alert variant="default" className="max-w-md mx-auto mb-6">
           <AlertTitle>Request Submitted Successfully!</AlertTitle>
           <AlertDescription>
-            We've received your pickup request. Our team will contact you within 24 hours to confirm the details.
+            We&apos;ve received your pickup request. Our team will contact you within 24 hours to confirm the details.
           </AlertDescription>
         </Alert>
         <div className="space-y-3 max-w-md mx-auto">
@@ -186,7 +187,7 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Request Free Pickup</CardTitle>
           <p className="text-gray-600">
-            Fill out the form below and we'll schedule a free pickup for your items
+            Fill out the form below and we&apos;ll schedule a free pickup for your items
           </p>
         </CardHeader>
 
@@ -405,10 +406,11 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                   {images.map((image, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={URL.createObjectURL(image)}
                         alt={`Upload ${index + 1}`}
-                        className="w-full h-20 object-cover rounded"
+                        fill
+                        className="object-cover rounded"
                       />
                       <Button
                         type="button"

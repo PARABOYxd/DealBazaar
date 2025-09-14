@@ -50,11 +50,11 @@ export function OtpInput({ onNext, onBack }: OtpInputProps) {
         control={control}
         name="otp"
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="flex flex-col items-center">
             <FormLabel>OTP</FormLabel>
             <FormControl>
-              <InputOTP maxLength={6} {...field}> {/* Replaced Input with InputOTP */}
-                <InputOTPGroup>
+              <InputOTP maxLength={6} {...field} className="mx-auto"> {/* Replaced Input with InputOTP */}
+                <InputOTPGroup className="flex flex-wrap justify-center">
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
                   <InputOTPSlot index={2} />
@@ -68,9 +68,9 @@ export function OtpInput({ onNext, onBack }: OtpInputProps) {
           </FormItem>
         )}
       />
-      <div className="flex justify-between">
-        <Button type="button" variant="outline" onClick={onBack}>Back</Button>
-        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white">Verify OTP</Button> {/* type="button" to prevent form submission */}
+      <div className="flex justify-between px-2">
+        <Button type="button" variant="outline" onClick={onBack} className="px-3">Back</Button>
+        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white px-3">Verify OTP</Button> {/* type="button" to prevent form submission */}
       </div>
     </div>
   );

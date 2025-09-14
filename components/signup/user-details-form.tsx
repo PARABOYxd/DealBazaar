@@ -83,8 +83,8 @@ export function UserDetailsForm({ onNext, onBack }: UserDetailsFormProps) {
         )}
       />
       <div className="flex justify-between mt-4">
-        <Button type="button" variant="outline" onClick={onBack}>Back</Button>
-        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white">Sign Up</Button> {/* type="button" to prevent form submission */}
+        <Button type="button" variant="outline" onClick={onBack} className="px-3">Back</Button>
+        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white px-3">Sign Up</Button> {/* type="button" to prevent form submission */}
       </div>
     </div>
   );

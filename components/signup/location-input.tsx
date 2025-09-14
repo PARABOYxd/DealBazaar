@@ -86,8 +86,8 @@ export function LocationInput({ onNext, onBack }: LocationInputProps) {
         <p className="text-sm text-gray-600">Current Location: {getValues('currentLocation')}</p>
       )}
       <div className="flex justify-between mt-4">
-        <Button type="button" variant="outline" onClick={onBack}>Back</Button>
-        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white">Next</Button> {/* type="button" to prevent form submission */}
+        <Button type="button" variant="outline" onClick={onBack} className="px-3">Back</Button>
+        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white px-3">Next</Button> {/* type="button" to prevent form submission */}
       </div>
     </div>
   );

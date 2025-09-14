@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import * as z from 'zod';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ interface PhoneInputProps {
 
 export function PhoneInput({ onNext }: PhoneInputProps) {
   const { control, trigger, getValues } = useFormContext(); // Get form methods from context
+  const router = useRouter(); // Initialize useRouter
 
   const handleNext = async () => {
     const isValid = await trigger('phoneNumber'); // Trigger validation for this field
@@ -36,6 +38,10 @@ export function PhoneInput({ onNext }: PhoneInputProps) {
       console.log('Sending OTP to:', getValues('phoneNumber'));
       onNext(); // Call parent's onNext
     }
+  };
+
+  const handleSkip = () => {
+    router.push('/'); // Navigate to home page
   };
 
   return (
@@ -53,7 +59,8 @@ export function PhoneInput({ onNext }: PhoneInputProps) {
           </FormItem>
         )}
       />
-      <Button type="button" onClick={handleNext} className="w-full bg-blue-600 hover:bg-blue-700 text-white">Send OTP</Button> {/* type="button" to prevent form submission */}
+      <Button type="button" onClick={handleNext} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-3">Send OTP</Button> {/* type="button" to prevent form submission */}
+      <Button type="button" onClick={handleSkip} variant="outline" className="w-full px-3 mt-2">Skip</Button>
     </div>
   );
 }

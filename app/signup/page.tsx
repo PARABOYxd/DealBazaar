@@ -15,6 +15,9 @@ import { UserDetailsForm } from '@/components/signup/user-details-form';
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
+
+const image = process.env.NEXT_PUBLIC_IMAGE || 'https://electrofurni.com/logo.png';
 import * as z from 'zod';
 
 // Define the overall schema for the signup form
@@ -118,18 +121,14 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Image Section */}
-      <div className="hidden md:flex md:w-2/3 h-screen bg-cover bg-center relative"
-        style={{ backgroundImage: 'url("https://picsum.photos/seed/signup/1920/1080")' }}> {/* Placeholder image */}
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold text-center px-8">
-            Sell Your Electronics & Furniture
-          </h1>
-        </div>
+      <div className="hidden md:flex md:w-1/2 h-[80vh] bg-cover bg-center relative"
+        style={{ backgroundImage: 'url("/images/signup.webp")' }}> {/* Placeholder image */}
+
       </div>
 
       {/* Sign Up Form Section */}
-      <div className="w-full md:w-1/3 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md p-8 rounded-lg"> {/* Removed bg-white */}
+      <div className="w-full md:w-1/3 py-12 px-4 sm:px-6 lg:px-8 ">
+        <div className="w-full max-w-md p-8 rounded-lg mx-auto"> {/* Removed bg-white */}
           <h2 className="text-center text-3xl font-bold text-gray-900 mb-4">Sign Up</h2>
           <p className="text-center text-sm text-gray-600 mb-6">
             Step {currentStep + 1} of {steps.length}: {steps[currentStep].description}

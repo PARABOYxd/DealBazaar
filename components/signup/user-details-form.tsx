@@ -4,11 +4,9 @@ import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -25,21 +23,8 @@ const userDetailsSchema = z.object({
 
 type UserDetailsFormValues = z.infer<typeof userDetailsSchema>;
 
-interface UserDetailsFormProps {
-  onNext: () => void; // onNext no longer receives data directly, it's managed by parent form
-  onBack: () => void;
-}
-
-export function UserDetailsForm({ onNext, onBack }: UserDetailsFormProps) {
-  const { control, trigger, getValues } = useFormContext();
-
-  const handleNext = async () => {
-    const isValid = await trigger(['name', 'email', 'referralCode']);
-    if (isValid) {
-      console.log('User details:', getValues('name'), getValues('email'), getValues('referralCode'));
-      onNext(); // Call parent's onNext (which will be the final handleSubmit)
-    }
-  };
+export function UserDetailsForm() {
+  const { control } = useFormContext();
 
   return (
     <div className="space-y-4"> {/* No <form> tag here */}
@@ -82,10 +67,6 @@ export function UserDetailsForm({ onNext, onBack }: UserDetailsFormProps) {
           </FormItem>
         )}
       />
-      <div className="flex justify-between mt-4">
-        <Button type="button" variant="outline" onClick={onBack} className="px-3">Back</Button>
-        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white px-3">Sign Up</Button> {/* type="button" to prevent form submission */}
-      </div>
     </div>
   );
 }

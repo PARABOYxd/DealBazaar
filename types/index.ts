@@ -29,7 +29,7 @@ export interface PickupRequest {
   id?: string;
   customerName: string;
   phone: string;
-  email: string;
+  email?: string;
   address: string;
   city: string;
   pincode: string;

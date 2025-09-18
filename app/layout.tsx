@@ -8,6 +8,7 @@ import { FloatingActions } from '@/components/common/floating-actions';
 import { Schema } from '@/components/ui/schema';
 import { generateLocalBusinessSchema } from '@/lib/seo';
 import { LayoutWrapper } from '@/components/common/layout-wrapper';
+import { AuthProvider } from '@/components/providers/auth-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -72,11 +73,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <QueryProvider>
-          <div className="min-h-screen bg-gray-50">
-            <LayoutWrapper contactInfo={contactInfo}>
-              {children}
-            </LayoutWrapper>
-          </div>
+          <AuthProvider>
+            <div className="min-h-screen bg-gray-50">
+              <LayoutWrapper contactInfo={contactInfo}>
+                {children}
+              </LayoutWrapper>
+            </div>
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

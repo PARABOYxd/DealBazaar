@@ -4,11 +4,8 @@ import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button } from '@/components/ui/button';
-// import { Input } from '@/components/ui/input'; // Removed this import
 import { Label } from '@/components/ui/label';
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -28,21 +25,8 @@ const otpSchema = z.object({
 
 type OtpFormValues = z.infer<typeof otpSchema>;
 
-interface OtpInputProps {
-  onNext: () => void;
-  onBack: () => void;
-}
-
-export function OtpInput({ onNext, onBack }: OtpInputProps) {
-  const { control, trigger, getValues } = useFormContext();
-
-  const handleNext = async () => {
-    const isValid = await trigger('otp');
-    if (isValid) {
-      console.log('Verifying OTP:', getValues('otp'));
-      onNext();
-    }
-  };
+export function OtpInput() {
+  const { control } = useFormContext();
 
   return (
     <div className="space-y-4"> {/* No <form> tag here */}
@@ -68,10 +52,6 @@ export function OtpInput({ onNext, onBack }: OtpInputProps) {
           </FormItem>
         )}
       />
-      <div className="flex justify-between px-2">
-        <Button type="button" variant="outline" onClick={onBack} className="px-3">Back</Button>
-        <Button type="button" onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 text-white px-3">Verify OTP</Button> {/* type="button" to prevent form submission */}
-      </div>
     </div>
   );
 }

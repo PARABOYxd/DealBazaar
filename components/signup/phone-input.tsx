@@ -3,13 +3,10 @@
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import * as z from 'zod';
-import { useRouter } from 'next/navigation'; // Import useRouter
 
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -24,25 +21,8 @@ const phoneSchema = z.object({
 
 type PhoneFormValues = z.infer<typeof phoneSchema>; // Still useful for type inference
 
-interface PhoneInputProps {
-  onNext: () => void; // onNext no longer receives data directly, it's managed by parent form
-}
-
-export function PhoneInput({ onNext }: PhoneInputProps) {
-  const { control, trigger, getValues } = useFormContext(); // Get form methods from context
-  const router = useRouter(); // Initialize useRouter
-
-  const handleNext = async () => {
-    const isValid = await trigger('phoneNumber'); // Trigger validation for this field
-    if (isValid) {
-      console.log('Sending OTP to:', getValues('phoneNumber'));
-      onNext(); // Call parent's onNext
-    }
-  };
-
-  const handleSkip = () => {
-    router.push('/'); // Navigate to home page
-  };
+export function PhoneInput() {
+  const { control } = useFormContext(); // Get form methods from context
 
   return (
     <div className="space-y-4"> {/* No <form> tag here */}
@@ -59,8 +39,6 @@ export function PhoneInput({ onNext }: PhoneInputProps) {
           </FormItem>
         )}
       />
-      <Button type="button" onClick={handleNext} className="w-full bg-blue-700 hover:bg-blue-800 text-white px-3">Send OTP</Button> {/* type="button" to prevent form submission */}
-      <Button type="button" onClick={handleSkip} variant="outline" className="w-full px-3 mt-2">Skip</Button>
     </div>
   );
 }

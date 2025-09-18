@@ -138,7 +138,9 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
 
             <div className="flex items-center justify-between pt-2">
               <div className="text-lg font-bold text-green-600">
-                ₹{product.estimatePriceMin.toLocaleString()} - ₹{product.estimatePriceMax.toLocaleString()}
+                {product.estimatePriceMin != null && product.estimatePriceMax != null &&
+                  `₹${product.estimatePriceMin.toLocaleString()} - ₹${product.estimatePriceMax.toLocaleString()}`
+                }
               </div>
               <Button
                 size="sm"

@@ -16,14 +16,11 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiService } from '@/lib/api';
 import { PickupRequest } from '@/types';
 import Image from 'next/image';
+import { useAuth } from '@/components/providers/auth-provider';
 
 const pickupSchema = z.object({
-  customerName: z.string().min(2, 'Name must be at least 2 characters'),
-  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid email address').optional(),
   address: z.string().min(10, 'Address must be at least 10 characters'),
-  city: z.string().min(2, 'City is required'),
-  pincode: z.string().min(6, 'Pincode must be 6 digits'),
   items: z.array(z.object({
     category: z.string().min(1, 'Category is required'),
     description: z.string().min(5, 'Description must be at least 5 characters'),
@@ -46,6 +43,7 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]);
+  const { user } = useAuth();
 
   const {
     register,
@@ -58,6 +56,7 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
     resolver: zodResolver(pickupSchema),
     defaultValues: {
       items: [{ category: '', description: '', quantity: 1, condition: '' }],
+      email: user?.email || '',
     },
   });
 
@@ -110,6 +109,11 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
   };
 
   const onSubmit = async (data: PickupFormData) => {
+    if (!user) {
+      setSubmitError('You must be logged in to submit a request.');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError(null);
     
@@ -123,9 +127,12 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
         }
       }
 
-      // Submit pickup request
       const requestData: Omit<PickupRequest, 'id'> = {
         ...data,
+        customerName: user.name,
+        phone: user.phoneNumber || '', // Assuming phone number is in user object
+        city: 'N/A', // City is not in user object, to be discussed
+        pincode: 'N/A', // Pincode is not in user object, to be discussed
         images: imageUrls,
       };
 
@@ -200,47 +207,6 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
                     <AlertDescription>{submitError}</AlertDescription>
                 </Alert>
             )}
-            {/* Personal Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="customerName">Full Name *</Label>
-                <Input
-                  id="customerName"
-                  {...register('customerName')}
-                  placeholder="Enter your full name"
-                />
-                {errors.customerName && (
-                  <p className="text-sm text-red-600 mt-1">{errors.customerName.message}</p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  {...register('phone')}
-                  placeholder="+91 9876543210"
-                />
-                {errors.phone && (
-                  <p className="text-sm text-red-600 mt-1">{errors.phone.message}</p>
-                )}
-              </div>
-
-              <div className="md:col-span-2">
-                <Label htmlFor="email">Email Address *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  placeholder="your.email@example.com"
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-                )}
-              </div>
-            </div>
-
             {/* Address Information */}
             <div className="space-y-4">
               <div>
@@ -255,31 +221,17 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
                   <p className="text-sm text-red-600 mt-1">{errors.address.message}</p>
                 )}
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="city">City *</Label>
-                  <Input
-                    id="city"
-                    {...register('city')}
-                    placeholder="Enter your city"
-                  />
-                  {errors.city && (
-                    <p className="text-sm text-red-600 mt-1">{errors.city.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="pincode">Pincode *</Label>
-                  <Input
-                    id="pincode"
-                    {...register('pincode')}
-                    placeholder="400001"
-                  />
-                  {errors.pincode && (
-                    <p className="text-sm text-red-600 mt-1">{errors.pincode.message}</p>
-                  )}
-                </div>
+              <div>
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  {...register('email')}
+                  placeholder="your.email@example.com"
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+                )}
               </div>
             </div>
 

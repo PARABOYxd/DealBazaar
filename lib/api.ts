@@ -52,6 +52,21 @@ class ApiService {
     }
   }
 
+  // OTP
+  async sendOtp(mobileNumber: string): Promise<ApiResponse<{ message: string }>> {
+    return this.fetchApi('/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ mobileNumber }),
+    });
+  }
+
+  async verifyOtp(mobileNumber: string, otp: string): Promise<ApiResponse<{ token: string }>> {
+    return this.fetchApi('/auth/verify-otp', {
+      method: 'POST',
+      body: JSON.stringify({ mobileNumber, otp }),
+    });
+  }
+
   // Products
   async getProducts(filters?: {
     category?: string;

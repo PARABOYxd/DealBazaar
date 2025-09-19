@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, Eye } from 'lucide-react';
+import { Heart, MessageCircle, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -45,24 +45,22 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
     >
       <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300">
         <div className="relative aspect-[4/3] overflow-hidden">
-          <Link href={`/product/${product.slug}`}>
-            <div className="relative w-full h-full bg-gray-100">
-              <Image
-                src={(product.images && product.images[0]) || '/images/placeholder-product.jpg'}
-                alt={product.name}
-                fill
-                className={cn(
-                  "object-cover transition-all duration-300 group-hover:scale-105",
-                  imageLoaded ? "opacity-100" : "opacity-0"
-                )}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                onLoad={() => setImageLoaded(true)}
-              />
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+          <div className="relative w-full h-full bg-gray-100">
+            <Image
+              src={(product.images && product.images[0]) || '/images/placeholder-product.jpg'}
+              alt={product.name}
+              fill
+              className={cn(
+                "object-cover transition-all duration-300 group-hover:scale-105",
+                imageLoaded ? "opacity-100" : "opacity-0"
               )}
-            </div>
-          </Link>
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              onLoad={() => setImageLoaded(true)}
+            />
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+            )}
+          </div>
 
           {/* Overlay Actions */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -70,20 +68,20 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
               <Button
                 size="sm"
                 variant="secondary"
-                className="bg-white/90 hover:bg-white"
+                className="bg-white/90 hover:bg-white h-8 px-2 text-xs md:h-9 md:px-3 md:text-sm"
                 asChild
               >
-                <Link href={`/product/${product.slug}`}>
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
+                <Link href="/pickup-request">
+                  <Tag className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                  Sell Now
                 </Link>
               </Button>
               <Button
                 size="sm"
                 onClick={openWhatsApp}
-                className="bg-green-500 hover:bg-green-600"
+                className="bg-green-500 hover:bg-green-600 h-8 px-2 text-xs md:h-9 md:px-3 md:text-sm"
               >
-                <MessageCircle className="w-4 h-4 mr-1" />
+                <MessageCircle className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                 WhatsApp
               </Button>
             </div>
@@ -115,39 +113,39 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
           </Badge> */}
         </div>
 
-        <CardContent className="p-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-xs">
-                {product.category}
-              </Badge>
-              {product.brand && (
-                <span className="text-xs text-gray-500">{product.brand}</span>
-              )}
-            </div>
+        <CardContent className="p-2 md:p-3">
+          <div className="flex flex-col h-full space-y-1 md:space-y-2">
+            <div className="flex-grow">
+              <div className="flex items-center justify-between">
+                {/* <Badge variant="outline" className="text-xs">
+                  {product.category}
+                </Badge> */}
+                {product.brand && (
+                  <span className="text-xs text-gray-500">{product.brand}</span>
+                )}
+              </div>
 
-            <Link href={`/product/${product.slug}`}>
-              <h3 className="font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-gray-900 line-clamp-2 text-sm md:text-base h-10 md:h-12">
                 {product.name}
               </h3>
-            </Link>
 
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {product.description}
-            </p>
+              <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
+                {product.description}
+              </p>
+            </div>
 
-            <div className="flex items-center justify-between pt-2">
-              <div className="text-lg font-bold text-green-600">
+            <div className="flex items-center justify-end pt-1 md:pt-2">
+              {/* <div className="text-lg font-bold text-green-600">
                 {product.estimatePriceMin != null && product.estimatePriceMax != null &&
                   `₹${product.estimatePriceMin.toLocaleString()} - ₹${product.estimatePriceMax.toLocaleString()}`
                 }
-              </div>
+              </div> */}
               <Button
                 size="sm"
                 onClick={openWhatsApp}
-                className="bg-green-500 hover:bg-green-600 text-xs px-3"
+                className="bg-green-500 hover:bg-green-600 text-xs px-2 md:px-3"
               >
-                Get Quote
+                Sell Now
               </Button>
             </div>
           </div>

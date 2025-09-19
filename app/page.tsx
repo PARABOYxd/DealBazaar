@@ -23,6 +23,57 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Autoplay from "embla-carousel-autoplay";
 import { useInView } from 'react-intersection-observer';
+import { Product } from '@/types';
+
+interface ProductSectionProps {
+  title: string;
+  products: Product[];
+  whatsappNumber: string;
+}
+
+const ProductSection = ({ title, products, whatsappNumber }: ProductSectionProps) => {
+  const plugin = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
+
+  return (
+    <section className="py-16 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {title}
+          </h2>
+        </motion.div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[plugin.current]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {Array.isArray(products) && products.map((product) => (
+              <CarouselItem key={product.id} className="pl-4 basis-1/3 lg:basis-1/4">
+                <ProductCard
+                  product={product}
+                  whatsappNumber={whatsappNumber}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
+    </section>
+  );
+};
 
 export default function Home() {
   const plugin = React.useRef(
@@ -43,14 +94,19 @@ export default function Home() {
     }
   }, [api, inView]);
 
-  const { data: categoriesData } = useQuery({
-    queryKey: ['categories', { page: 1, size: 10 }],
-    queryFn: () => apiService.getCategories(),
+  const { data: electronicsData } = useQuery({
+    queryKey: ['products', 'electronics'],
+    queryFn: () => apiService.getProducts({ category: 'electronics' }),
   });
 
-  const { data: productsData } = useQuery({
-    queryKey: ['featured-products'],
-    queryFn: () => apiService.getProducts({ size: 6, page: 1 }),
+  const { data: homeAppliancesData } = useQuery({
+    queryKey: ['products', 'home-appliances'],
+    queryFn: () => apiService.getProducts({ category: 'home-appliances' }),
+  });
+
+  const { data: furnitureData } = useQuery({
+    queryKey: ['products', 'furniture'],
+    queryFn: () => apiService.getProducts({ category: 'furniture' }),
   });
 
   const { data: testimonialsData } = useQuery({
@@ -58,8 +114,9 @@ export default function Home() {
     queryFn: () => apiService.getTestimonials(9),
   });
 
-  const categories = categoriesData?.data || [];
-  const products = productsData?.data || [];
+  const electronics = electronicsData?.data || [];
+  const homeAppliances = homeAppliancesData?.data || [];
+  const furniture = furnitureData?.data || [];
   const testimonials = testimonialsData?.data || [];
 
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210';
@@ -181,105 +238,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Rate List Section (Commented Out) */}
-
-      <section className="py-20 bg-white sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              What We Buy
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We accept a wide range of electronics and furniture items in any condition.
-            </p>
-          </motion.div>
-
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            plugins={[plugin.current]}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {Array.isArray(categories) && categories.slice(0, 7).map((category, index) => (
-                <CarouselItem key={category.id} className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Link href={`/products?category=${category.slug}`} className="group block">
-                      <Card className="relative h-64 overflow-hidden rounded-xl shadow-lg">
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-black/20" />
-                        <CardContent className="absolute bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-sm">
-                          <h3 className="font-bold text-gray-900 text-lg">
-                            {category.name}
-                          </h3>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  </motion.div>
-                </CarouselItem>
-              ))}
-
-            </CarouselContent>
-
-          </Carousel>
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      {/* <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Recently Purchased Items
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              See what we've recently bought from our customers and get an idea of pricing
-            </p>
-          </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {Array.isArray(products) && products.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                whatsappNumber={whatsappNumber}
-              />
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button asChild size="lg">
-              <Link href="/products">
-                View All Products
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section> */}
+      {electronics.length > 0 && (
+        <ProductSection title="Electronics" products={electronics} whatsappNumber={whatsappNumber} />
+      )}
+      {homeAppliances.length > 0 && (
+        <ProductSection title="Home Appliances" products={homeAppliances} whatsappNumber={whatsappNumber} />
+      )}
+      {furniture.length > 0 && (
+        <ProductSection title="Furniture" products={furniture} whatsappNumber={whatsappNumber} />
+      )}
 
       {/* How It Works */}
       <section className="py-16 bg-white">

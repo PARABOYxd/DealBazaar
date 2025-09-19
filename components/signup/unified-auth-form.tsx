@@ -16,6 +16,7 @@ import { UserDetailsForm } from './user-details-form';
 interface UnifiedAuthFormProps {
   onSuccess?: () => void;
   onError?: (error: string) => void;
+  isModal?: boolean;
 }
 
 // Optimized validation schemas
@@ -46,8 +47,8 @@ const STEPS = {
   ]
 } as const;
 
-export function UnifiedAuthForm({ onSuccess, onError }: UnifiedAuthFormProps) {
-  const [authType, setAuthType] = useState<'login' | 'signup' | null>(null);
+export function UnifiedAuthForm({ onSuccess, onError, isModal }: UnifiedAuthFormProps) {
+  const [authType, setAuthType] = useState<'login' | 'signup' | null>(isModal ? 'signup' : null);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -176,7 +177,7 @@ export function UnifiedAuthForm({ onSuccess, onError }: UnifiedAuthFormProps) {
                       Back
                     </Button>
                   )}
-                  <Button
+                  {!isModal && <Button
                     type="button"
                     onClick={reset}
                     variant="ghost"
@@ -185,7 +186,7 @@ export function UnifiedAuthForm({ onSuccess, onError }: UnifiedAuthFormProps) {
                     aria-label="Restart authentication process"
                   >
                     Start Over
-                  </Button>
+                  </Button>}
                 </div>
 
                 <Button

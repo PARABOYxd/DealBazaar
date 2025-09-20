@@ -25,9 +25,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Session management utilities
-const AUTH_TOKEN_KEY = 'electrofurni_auth_token';
-const USER_DATA_KEY = 'electrofurni_user_data';
-const TOKEN_EXPIRY_KEY = 'electrofurni_token_expiry';
+const AUTH_TOKEN_KEY = 'token';
+const USER_DATA_KEY = 'user_data';
+const TOKEN_EXPIRY_KEY = 'token_expiry';
 
 const isTokenExpired = (expiry: string): boolean => {
   return new Date().getTime() > parseInt(expiry);

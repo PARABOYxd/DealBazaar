@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/components/providers/auth-provider';
+import { apiService } from '@/lib/api';
 
 const navigation = [
   { name: 'All', href: '/' },
@@ -41,6 +42,8 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
     location: ''
   });
   const [loginStep, setLoginStep] = useState(1); // 1: Phone, 2: OTP, 3: Details
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
 
@@ -65,16 +68,42 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
     setIsLoginOpen(true);
   };
 
-  const handlePhoneSubmit = () => {
+  const handlePhoneSubmit = async () => {
+    setLoginError('');
     if (loginData.phone.length === 10) {
-      setLoginStep(2);
-      // Here you would typically send OTP
+      setLoginLoading(true);
+      try {
+        const res = await apiService.sendOtp(loginData.phone);
+        if (res.status === 200) {
+          setLoginStep(2);
+        } else {
+          setLoginError(res.message || 'Failed to send OTP');
+        }
+      } catch (err) {
+        setLoginError('Failed to send OTP');
+      } finally {
+        setLoginLoading(false);
+      }
     }
   };
 
-  const handleOTPSubmit = () => {
+  const handleOTPSubmit = async () => {
+    setLoginError('');
     if (loginData.otp.length === 6) {
-      setLoginStep(3);
+      setLoginLoading(true);
+      try {
+        const res = await apiService.verifyOtp(loginData.phone, loginData.otp);
+        if (res.status === 200 && res.data && res.data[0]?.token) {
+          localStorage.setItem('token', res.data[0].token);
+          setLoginStep(3);
+        } else {
+          setLoginError(res.message || 'Invalid OTP');
+        }
+      } catch (err) {
+        setLoginError('Invalid OTP');
+      } finally {
+        setLoginLoading(false);
+      }
     }
   };
 
@@ -364,10 +393,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 <Button
                   onClick={handlePhoneSubmit}
                   className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                  disabled={loginData.phone.length !== 10}
+                  disabled={loginData.phone.length !== 10 || loginLoading}
                 >
-                  Send OTP
+                  {loginLoading ? 'Sending OTP...' : 'Send OTP'}
                 </Button>
+                {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
               </div>
             )}
 
@@ -399,10 +429,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 <Button
                   onClick={handleOTPSubmit}
                   className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                  disabled={loginData.otp.length !== 6}
+                  disabled={loginData.otp.length !== 6 || loginLoading}
                 >
-                  Verify OTP
+                  {loginLoading ? 'Verifying...' : 'Verify OTP'}
                 </Button>
+                {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
               </div>
             )}
 

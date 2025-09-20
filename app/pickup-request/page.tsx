@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { apiService } from '@/lib/api';
 
 // We can't use generateSEO directly in a client component for metadata.
 // This should be handled in a parent layout or page if possible.
@@ -19,16 +20,44 @@ export default function PickupRequestPage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [loginData, setLoginData] = useState({ phone: '', otp: '', name: '', email: '', location: '' });
   const [loginStep, setLoginStep] = useState(1); // 1: Phone, 2: OTP, 3: Details
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
 
-  const handlePhoneSubmit = () => {
+  const handlePhoneSubmit = async () => {
+    setLoginError('');
     if (loginData.phone.length === 10) {
-      setLoginStep(2);
-      // Here you would typically send OTP
+      setLoginLoading(true);
+      try {
+        const res = await apiService.sendOtp(loginData.phone);
+        if (res.status === 200) {
+          setLoginStep(2);
+        } else {
+          setLoginError(res.message || 'Failed to send OTP');
+        }
+      } catch (err) {
+        setLoginError('Failed to send OTP');
+      } finally {
+        setLoginLoading(false);
+      }
     }
   };
-  const handleOTPSubmit = () => {
+  const handleOTPSubmit = async () => {
+    setLoginError('');
     if (loginData.otp.length === 6) {
-      setLoginStep(3);
+      setLoginLoading(true);
+      try {
+        const res = await apiService.verifyOtp(loginData.phone, loginData.otp);
+        if (res.status === 200 && res.data && res.data[0]?.token) {
+          localStorage.setItem('token', res.data[0].token);
+          setLoginStep(3);
+        } else {
+          setLoginError(res.message || 'Invalid OTP');
+        }
+      } catch (err) {
+        setLoginError('Invalid OTP');
+      } finally {
+        setLoginLoading(false);
+      }
     }
   };
   const handleDetailsSubmit = () => {
@@ -85,12 +114,13 @@ export default function PickupRequestPage() {
                           maxLength={10}
                         />
                       </div>
+                      {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
                       <Button
                         onClick={handlePhoneSubmit}
                         className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                        disabled={loginData.phone.length !== 10}
+                        disabled={loginData.phone.length !== 10 || loginLoading}
                       >
-                        Send OTP
+                        {loginLoading ? 'Sending OTP...' : 'Send OTP'}
                       </Button>
                     </div>
                   )}
@@ -119,12 +149,13 @@ export default function PickupRequestPage() {
                           Resend OTP
                         </Button>
                       </div>
+                      {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
                       <Button
                         onClick={handleOTPSubmit}
                         className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                        disabled={loginData.otp.length !== 6}
+                        disabled={loginData.otp.length !== 6 || loginLoading}
                       >
-                        Verify OTP
+                        {loginLoading ? 'Verifying...' : 'Verify OTP'}
                       </Button>
                     </div>
                   )}

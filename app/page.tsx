@@ -208,7 +208,7 @@ export default function Home() {
 
       {/* Hero Carousel Section */}
       <section className="relative overflow-hidden">
-        <div className="mt-8 lg:mt-32 xl:mt-40 mx-4 lg:mx-24">
+        <div className="mt-8 lg:mt-20 xl:mt-24 mx-4 lg:mx-24">
           <Carousel
             opts={{
               align: "start",
@@ -220,30 +220,30 @@ export default function Home() {
             <CarouselContent>
               {/* Banner 1 - Sell Phone */}
               <CarouselItem className="basis-full">
-                <div className="bg-teal-500 text-white relative overflow-hidden min-h-[150px] lg:min-h-[200px] rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-4 py-12 lg:py-20">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div className="bg-teal-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-12">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-6 lg:space-y-8 text-center lg:text-left"
+                        className="space-y-2 lg:space-y-8 text-center lg:text-left"
                       >
-                        <div className="space-y-4 lg:space-y-6">
-                          <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+                        <div className="space-y-1 sm:space-y-2 lg:space-y-6">
+                          <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
                             Sell Old <span className="text-white">Phone</span>
                           </h1>
 
-                          <p className="text-lg lg:text-xl text-teal-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-teal-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                             From Your Doorstep or At Any of our 200 Stores Pan India
                           </p>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
                           <Button
-                            size="lg"
-                            className="bg-black hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold"
+                            size="sm"
+                            className="bg-black hover:bg-gray-800 text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
                             onClick={openWhatsApp}
                           >
                             Sell Now
@@ -256,29 +256,29 @@ export default function Home() {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative flex justify-center lg:justify-end px-12 lg:px-20 mt-12 lg:mt-16"
+                        className="relative flex justify-center lg:justify-end"
                       >
-                        <div className="relative w-60 h-64 lg:w-72 lg:h-80">
+                        <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-64 lg:w-72 lg:h-80">
                           {/* Phone Outline */}
-                          <div className="absolute inset-0 bg-black rounded-3xl p-4">
-                            <div className="bg-white rounded-2xl h-full p-6 flex flex-col items-center justify-center space-y-4">
+                          <div className="absolute inset-0 bg-black rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
+                            <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
                               {/* Doorstep Pickup Badge */}
-                              <div className="bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                                <Truck className="w-4 h-4" />
+                              <div className="bg-teal-500 text-white px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2">
+                                <Truck className="w-2 h-2 md:w-4 md:h-4" />
                                 DOORSTEP PICKUP
                               </div>
 
                               {/* 200 Stores Badge */}
-                              <div className="bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                                <MapPin className="w-4 h-4" />
+                              <div className="bg-teal-500 text-white px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2">
+                                <MapPin className="w-2 h-2 md:w-4 md:h-4" />
                                 200 STORES PAN INDIA
                               </div>
                             </div>
                           </div>
 
                           {/* Delivery Person Illustration */}
-                          <div className="absolute -bottom-8 -right-4 w-20 h-20 bg-teal-600 rounded-full flex items-center justify-center">
-                            <Truck className="w-8 h-8 text-white" />
+                          <div className="absolute -bottom-2 -right-1 sm:-bottom-4 sm:-right-2 md:-bottom-8 md:-right-4 w-8 h-8 sm:w-12 sm:h-12 md:w-20 md:h-20 bg-teal-600 rounded-full flex items-center justify-center">
+                            <Truck className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
                           </div>
                         </div>
                       </motion.div>
@@ -289,30 +289,30 @@ export default function Home() {
 
               {/* Banner 2 - Sell Laptop */}
               <CarouselItem className="basis-full">
-                <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white relative overflow-hidden min-h-[150px] lg:min-h-[200px] rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-4 py-12 lg:py-20">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-12">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-6 lg:space-y-8 text-center lg:text-left"
+                        className="space-y-2 lg:space-y-8 text-center lg:text-left"
                       >
-                        <div className="space-y-4 lg:space-y-6">
-                          <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+                        <div className="space-y-1 sm:space-y-2 lg:space-y-6">
+                          <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
                             Sell Old <span className="text-white">Laptop</span>
                           </h1>
 
-                          <p className="text-lg lg:text-xl text-blue-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-blue-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                             Get Best Prices for Your Old Laptop. Instant Quotes & Free Pickup
                           </p>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
                           <Button
-                            size="lg"
-                            className="bg-black hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold"
+                            size="sm"
+                            className="bg-black hover:bg-gray-800 text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
                             onClick={openWhatsApp}
                           >
                             Get Quote
@@ -325,16 +325,16 @@ export default function Home() {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative flex justify-center lg:justify-end px-12 lg:px-20 mt-12 lg:mt-16"
+                        className="relative flex justify-center lg:justify-end"
                       >
-                        <div className="relative w-60 h-64 lg:w-72 lg:h-80">
+                        <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-64 lg:w-72 lg:h-80">
                           {/* Laptop Outline */}
-                          <div className="absolute inset-0 bg-gray-800 rounded-3xl p-4">
-                            <div className="bg-white rounded-2xl h-full p-6 flex flex-col items-center justify-center space-y-4">
-                              <Laptop className="w-16 h-16 text-blue-600" />
+                          <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
+                            <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
+                              <Laptop className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-blue-600" />
                               <div className="text-center">
-                                <div className="text-sm font-semibold text-gray-800">Best Price</div>
-                                <div className="text-xs text-gray-600">Guaranteed</div>
+                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">Best Price</div>
+                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">Guaranteed</div>
                               </div>
                             </div>
                           </div>
@@ -347,30 +347,30 @@ export default function Home() {
 
               {/* Banner 3 - Sell Furniture */}
               <CarouselItem className="basis-full">
-                <div className="bg-gradient-to-r from-green-600 to-green-800 text-white relative overflow-hidden min-h-[150px] lg:min-h-[200px] rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-4 py-12 lg:py-20">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div className="bg-gradient-to-r from-green-600 to-green-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-12">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-6 lg:space-y-8 text-center lg:text-left"
+                        className="space-y-2 lg:space-y-8 text-center lg:text-left"
                       >
-                        <div className="space-y-4 lg:space-y-6">
-                          <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+                        <div className="space-y-1 sm:space-y-2 lg:space-y-6">
+                          <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
                             Sell Old <span className="text-white">Furniture</span>
                           </h1>
 
-                          <p className="text-lg lg:text-xl text-green-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-green-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                             Transform Your Space. Sell Old Furniture & Get Cash Instantly
                           </p>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
                           <Button
-                            size="lg"
-                            className="bg-black hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold"
+                            size="sm"
+                            className="bg-black hover:bg-gray-800 text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
                             onClick={openWhatsApp}
                           >
                             Sell Furniture
@@ -383,16 +383,16 @@ export default function Home() {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative flex justify-center lg:justify-end px-12 lg:px-20 mt-12 lg:mt-16"
+                        className="relative flex justify-center lg:justify-end"
                       >
-                        <div className="relative w-60 h-64 lg:w-72 lg:h-80">
+                        <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-64 lg:w-72 lg:h-80">
                           {/* Furniture Outline */}
-                          <div className="absolute inset-0 bg-gray-800 rounded-3xl p-4">
-                            <div className="bg-white rounded-2xl h-full p-6 flex flex-col items-center justify-center space-y-4">
-                              <Sofa className="w-16 h-16 text-green-600" />
+                          <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
+                            <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
+                              <Sofa className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-green-600" />
                               <div className="text-center">
-                                <div className="text-sm font-semibold text-gray-800">Free Pickup</div>
-                                <div className="text-xs text-gray-600">Doorstep Service</div>
+                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">Free Pickup</div>
+                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">Doorstep Service</div>
                               </div>
                             </div>
                           </div>
@@ -405,8 +405,8 @@ export default function Home() {
             </CarouselContent>
 
             {/* Carousel Navigation */}
-            <CarouselPrevious className="left-4 text-white" />
-            <CarouselNext className="right-4 text-white" />
+            {/* <CarouselPrevious className="left-4 text-white" />
+            <CarouselNext className="right-4 text-white" /> */}
           </Carousel>
 
           {/* Carousel Indicators */}

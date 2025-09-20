@@ -9,6 +9,8 @@ import { Schema } from '@/components/ui/schema';
 import { generateLocalBusinessSchema } from '@/lib/seo';
 import { LayoutWrapper } from '@/components/common/layout-wrapper';
 import { AuthProvider } from '@/components/providers/auth-provider';
+import { PerformanceMonitor } from '@/components/common/performance-monitor';
+import { ErrorBoundary } from '@/components/common/error-boundary';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -72,15 +74,18 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className={inter.className}>
-        <QueryProvider>
-          <AuthProvider>
-            <div className="min-h-screen bg-gray-50">
-              <LayoutWrapper contactInfo={contactInfo}>
-                {children}
-              </LayoutWrapper>
-            </div>
-          </AuthProvider>
-        </QueryProvider>
+        <ErrorBoundary>
+          <QueryProvider>
+            <AuthProvider>
+              <div className="min-h-screen bg-background">
+                <LayoutWrapper contactInfo={contactInfo}>
+                  {children}
+                </LayoutWrapper>
+              </div>
+              <PerformanceMonitor />
+            </AuthProvider>
+          </QueryProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

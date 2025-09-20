@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Phone, ChevronUp } from 'lucide-react';
+import { MessageCircle, Phone, ChevronUp, Zap, Star, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface FloatingActionsProps {
   whatsappNumber: string;
@@ -36,35 +37,55 @@ export function FloatingActions({ whatsappNumber, phoneNumber }: FloatingActions
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+    <div className="fixed bottom-6 right-6 z-50 flex-col gap-4 hidden lg:flex">
       {/* WhatsApp Button */}
       <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.5, type: 'spring' }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+        className="relative group"
       >
         <Button
           onClick={openWhatsApp}
-          className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all duration-300 group"
+          className="w-16 h-16 rounded-2xl bg-teal-500 hover:bg-teal-600 shadow-xl hover:shadow-2xl transition-all duration-300 group relative overflow-hidden"
           aria-label="Contact on WhatsApp"
         >
-          <MessageCircle className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+          <MessageCircle className="w-7 h-7 text-white group-hover:scale-110 transition-transform relative z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-teal-500 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </Button>
+
+        {/* Tooltip */}
+        <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="bg-slate-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap shadow-lg">
+            Get WhatsApp Quote
+            <div className="absolute left-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-l-4 border-l-slate-900 border-t-4 border-t-transparent border-b-4 border-b-transparent" />
+          </div>
+        </div>
       </motion.div>
 
       {/* Call Button */}
       <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.6, type: 'spring' }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+        className="relative group"
       >
         <Button
           onClick={makeCall}
-          className="w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 shadow-lg hover:shadow-xl transition-all duration-300 group"
+          className="w-16 h-16 rounded-2xl bg-teal-600 hover:bg-teal-700 shadow-xl hover:shadow-2xl transition-all duration-300 group relative overflow-hidden"
           aria-label="Make a call"
         >
-          <Phone className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+          <Phone className="w-7 h-7 text-white group-hover:scale-110 transition-transform relative z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </Button>
+
+        {/* Tooltip */}
+        <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="bg-slate-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap shadow-lg">
+            Call Now
+            <div className="absolute left-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-l-4 border-l-slate-900 border-t-4 border-t-transparent border-b-4 border-b-transparent" />
+          </div>
+        </div>
       </motion.div>
 
       {/* Scroll to Top Button */}
@@ -74,19 +95,41 @@ export function FloatingActions({ whatsappNumber, phoneNumber }: FloatingActions
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: 'spring' }}
+            transition={{ type: 'spring', stiffness: 200 }}
+            className="relative group"
           >
             <Button
               onClick={scrollToTop}
-              variant="secondary"
-              className="w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+              className="w-16 h-16 rounded-2xl bg-gradient-to-r from-teal-700 to-teal-800 hover:from-teal-800 hover:to-teal-900 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group relative overflow-hidden"
               aria-label="Scroll to top"
             >
-              <ChevronUp className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <ArrowUp className="w-7 h-7 text-white group-hover:scale-110 transition-transform relative z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-teal-800 to-teal-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </Button>
+
+            {/* Tooltip */}
+            <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="bg-slate-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap shadow-lg">
+                Back to Top
+                <div className="absolute left-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-l-4 border-l-slate-900 border-t-4 border-t-transparent border-b-4 border-b-transparent" />
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Floating Badge */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 1, type: 'spring', stiffness: 200 }}
+        className="absolute -top-2 -left-2"
+      >
+        <Badge className="bg-teal-500 text-white text-xs px-2 py-1 animate-bounce-gentle">
+          <Star className="w-3 h-3 mr-1 fill-white" />
+          Best Prices
+        </Badge>
+      </motion.div>
     </div>
   );
 }

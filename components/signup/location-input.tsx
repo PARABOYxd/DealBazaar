@@ -57,20 +57,20 @@ export function LocationInput() {
         name="pincode"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Pincode</FormLabel>
+            <FormLabel className="text-black font-medium">Pincode</FormLabel>
             <FormControl>
-              <Input placeholder="Enter Pincode" {...field} />
+              <Input placeholder="Enter Pincode" {...field} className="border-gray-300 focus:border-teal-500 focus:ring-teal-500" />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      <div className="text-center my-2">OR</div>
-      <Button type="button" onClick={handleGetCurrentLocation} className="w-full" variant="outline">
+      <div className="text-center my-2 text-gray-700">OR</div>
+      <Button type="button" onClick={handleGetCurrentLocation} className="w-full border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white" variant="outline">
         Get Current Location
       </Button>
       {getValues('currentLocation') && (
-        <p className="text-sm text-gray-600">Current Location: {getValues('currentLocation')}</p>
+        <p className="text-sm text-gray-700">Current Location: {getValues('currentLocation')}</p>
       )}
     </div>
   );

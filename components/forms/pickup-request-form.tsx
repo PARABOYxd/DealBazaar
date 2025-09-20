@@ -36,9 +36,10 @@ type PickupFormData = z.infer<typeof pickupSchema>;
 
 interface PickupRequestFormProps {
   whatsappNumber: string;
+  setIsLoginOpen: (isOpen: boolean) => void;
 }
 
-export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
+export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequestFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -110,7 +111,7 @@ export function PickupRequestForm({ whatsappNumber }: PickupRequestFormProps) {
 
   const onSubmit = async (data: PickupFormData) => {
     if (!user) {
-      setSubmitError('You must be logged in to submit a request.');
+      setIsLoginOpen(true);
       return;
     }
 

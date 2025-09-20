@@ -33,9 +33,9 @@ export function UserDetailsForm() {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Name</FormLabel>
+            <FormLabel className="text-black font-medium">Name</FormLabel>
             <FormControl>
-              <Input placeholder="Your Name" {...field} />
+              <Input placeholder="Your Name" {...field} className="border-gray-300 focus:border-teal-500 focus:ring-teal-500" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -46,9 +46,9 @@ export function UserDetailsForm() {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email (Optional)</FormLabel>
+            <FormLabel className="text-black font-medium">Email (Optional)</FormLabel>
             <FormControl>
-              <Input placeholder="your@example.com" {...field} />
+              <Input placeholder="your@example.com" {...field} className="border-gray-300 focus:border-teal-500 focus:ring-teal-500" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -59,9 +59,9 @@ export function UserDetailsForm() {
         name="referralCode"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Referral Code (Optional)</FormLabel>
+            <FormLabel className="text-black font-medium">Referral Code (Optional)</FormLabel>
             <FormControl>
-              <Input placeholder="Enter referral code" {...field} />
+              <Input placeholder="Enter referral code" {...field} className="border-gray-300 focus:border-teal-500 focus:ring-teal-500" />
             </FormControl>
             <FormMessage />
           </FormItem>

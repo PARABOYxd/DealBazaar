@@ -35,7 +35,7 @@ export function OtpInput() {
         name="otp"
         render={({ field }) => (
           <FormItem className="flex flex-col items-center">
-            <FormLabel>OTP</FormLabel>
+            <FormLabel className="text-black font-medium">OTP</FormLabel>
             <FormControl>
               <InputOTP maxLength={6} {...field} className="mx-auto"> {/* Replaced Input with InputOTP */}
                 <InputOTPGroup className="flex flex-wrap justify-center">

@@ -25,12 +25,12 @@ export function PerformanceMonitor() {
 
         // Load web vitals library dynamically
         import('web-vitals')
-            .then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-                getCLS(reportWebVitals);
-                getFID(reportWebVitals);
-                getFCP(reportWebVitals);
-                getLCP(reportWebVitals);
-                getTTFB(reportWebVitals);
+            .then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
+                onCLS(reportWebVitals);
+                onINP(reportWebVitals);
+                onFCP(reportWebVitals);
+                onLCP(reportWebVitals);
+                onTTFB(reportWebVitals);
             })
             .catch((error) => {
                 console.warn('Failed to load web-vitals:', error);
@@ -43,11 +43,13 @@ export function PerformanceMonitor() {
                     for (const entry of list.getEntries()) {
                         if (entry.entryType === 'navigation') {
                             const navEntry = entry as PerformanceNavigationTiming;
-                            console.log('Navigation timing:', {
-                                domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
-                                loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart,
-                                domInteractive: navEntry.domInteractive - navEntry.navigationStart,
-                            });
+                            if (navEntry.activationStart) {
+                                console.log('Navigation timing:', {
+                                    domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
+                                    loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart,
+                                    domInteractive: navEntry.domInteractive - navEntry.activationStart,
+                                });
+                            }
                         }
                     }
                 });

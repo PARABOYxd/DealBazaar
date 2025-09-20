@@ -1,4 +1,4 @@
-import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
+import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo, User } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -68,6 +68,14 @@ class ApiService {
       body: JSON.stringify({ mobileNumber, otp }),
     });
     return res.json();
+  }
+
+  async getMe(token: string): Promise<ApiResponse<User>> {
+    return this.fetchApi(`/customer/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   // Products

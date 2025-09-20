@@ -99,17 +99,17 @@ export function UnifiedAuthForm({ onSuccess, onError, isModal }: UnifiedAuthForm
         <h1 className="sr-only">User Authentication</h1>
 
         {!authType ? (
-          <Card className="p-6 space-y-6" role="region" aria-labelledby="auth-selection">
+          <Card className="p-6 space-y-6 bg-white border border-gray-200" role="region" aria-labelledby="auth-selection">
             <header className="text-center space-y-2">
-              <h2 id="auth-selection" className="text-xl font-semibold">Welcome Back</h2>
-              <p className="text-gray-600">Choose your authentication method</p>
+              <h2 id="auth-selection" className="text-xl font-semibold text-black">Welcome Back</h2>
+              <p className="text-gray-700">Choose your authentication method</p>
             </header>
 
             <nav className="flex flex-col space-y-3" aria-label="Authentication options">
               <Button
                 type="button"
                 onClick={() => setAuthType('login')}
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-teal-500 hover:bg-teal-600 text-white"
                 aria-describedby="login-desc"
               >
                 Login to Account
@@ -120,7 +120,7 @@ export function UnifiedAuthForm({ onSuccess, onError, isModal }: UnifiedAuthForm
                 type="button"
                 onClick={() => setAuthType('signup')}
                 variant="outline"
-                className="w-full"
+                className="w-full border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white"
                 aria-describedby="signup-desc"
               >
                 Create New Account
@@ -129,12 +129,12 @@ export function UnifiedAuthForm({ onSuccess, onError, isModal }: UnifiedAuthForm
             </nav>
           </Card>
         ) : (
-          <Card className="p-6 space-y-6" role="region" aria-labelledby="auth-form">
+          <Card className="p-6 space-y-6 bg-white border border-gray-200" role="region" aria-labelledby="auth-form">
             <header className="text-center space-y-2">
-              <h2 id="auth-form" className="text-lg font-semibold">
+              <h2 id="auth-form" className="text-lg font-semibold text-black">
                 {authType === 'login' ? 'Account Login' : 'Account Registration'}
               </h2>
-              <p className="text-sm text-gray-600" aria-live="polite">
+              <p className="text-sm text-gray-700" aria-live="polite">
                 Step {step + 1} of {totalSteps}: {currentStep?.title}
               </p>
             </header>
@@ -192,7 +192,7 @@ export function UnifiedAuthForm({ onSuccess, onError, isModal }: UnifiedAuthForm
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="min-w-[80px]"
+                  className="min-w-[80px] bg-teal-500 hover:bg-teal-600 text-white"
                   aria-label={isLast ? 'Submit form' : 'Continue to next step'}
                 >
                   {loading ? 'Processing...' : (isLast ? 'Submit' : 'Continue')}

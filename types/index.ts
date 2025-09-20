@@ -106,3 +106,13 @@ export interface ApiResponse<T> {
   error?: string;
   pagination?: Pagination;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  avatar?: string;
+  createdAt: string;
+  lastLoginAt: string;
+}

@@ -22,13 +22,13 @@ export default async function RateListPage() {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-white">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <header className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-black sm:text-5xl">
             Our Rate List
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
+          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-700">
             Get an estimate for your used electronics and furniture. Prices vary based on condition, brand, and model.
           </p>
         </header>
@@ -52,7 +52,7 @@ export default async function RateListPage() {
               </CardHeader>
               <CardContent className="p-6">
                 <p className="text-gray-600 mb-4 line-clamp-3">{category.description}</p>
-                <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button asChild className="w-full bg-teal-500 hover:bg-teal-600 text-white">
                   <Link href={`/products?category=${category.slug}`}>
                     View Products in this Category
                   </Link>
@@ -63,11 +63,11 @@ export default async function RateListPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Ready to Sell?</h2>
-          <p className="mt-2 text-lg text-gray-600">
+          <h2 className="text-3xl font-bold text-black">Ready to Sell?</h2>
+          <p className="mt-2 text-lg text-gray-700">
             Request a pickup for your items today and get a final offer.
           </p>
-          <Button asChild size="lg" className="mt-6">
+          <Button asChild size="lg" className="mt-6 bg-teal-500 hover:bg-teal-600 text-white">
             <Link href="/pickup-request">Request a Pickup</Link>
           </Button>
         </div>

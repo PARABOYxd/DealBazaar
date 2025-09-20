@@ -31,9 +31,9 @@ export function PhoneInput() {
         name="phoneNumber"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Phone Number</FormLabel>
+            <FormLabel className="text-black font-medium">Phone Number</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., +919876543210" {...field} />
+              <Input placeholder="e.g., +919876543210" {...field} className="border-gray-300 focus:border-teal-500 focus:ring-teal-500" />
             </FormControl>
             <FormMessage />
           </FormItem>

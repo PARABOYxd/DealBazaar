@@ -1,22 +1,14 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  avatar?: string;
-  createdAt: string;
-  lastLoginAt: string;
-}
+import { apiService } from '@/lib/api';
+import { User } from '@/types';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   isLoading: boolean;
-  login: (userData: User, token: string) => void;
+  login: (token: string) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
   refreshToken: () => Promise<boolean>;
@@ -109,7 +101,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, [isAuthenticated]);
 
-  const login = (userData: User, token: string) => {
+  const login = async (token: string) => {
+    try {
+      const userResponse = await apiService.getMe(token);
+      if (userResponse.success && userResponse.data) {
+        loginWithUserData(userResponse.data, token);
+      }
+    } catch (error) {
+      console.error('Failed to login', error);
+      logout();
+    }
+  };
+
+  const loginWithUserData = (userData: User, token: string) => {
     setIsAuthenticated(true);
     setUser(userData);
     saveAuthData(token, userData);

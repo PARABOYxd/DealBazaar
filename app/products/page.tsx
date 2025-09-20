@@ -65,13 +65,13 @@ export default function ProductsPage() {
   const pageTitle = category ? `${category} Products` : 'All Products';
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Button variant="ghost" className="mb-6" asChild>
+        <Button variant="ghost" className="mb-6 text-teal-600 hover:text-teal-700" asChild>
           <Link href="/">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
@@ -79,7 +79,7 @@ export default function ProductsPage() {
         </Button>
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-4xl font-bold text-gray-900">{pageTitle}</h1>
+          <h1 className="text-4xl font-bold text-black">{pageTitle}</h1>
           <div className="relative w-full md:w-1/3">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input

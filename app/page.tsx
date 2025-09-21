@@ -178,6 +178,9 @@ export default function Home() {
     { name: 'Sell Audio', icon: Headphones, color: 'bg-teal-100' },
     { name: 'Sell Monitors', icon: Monitor, color: 'bg-teal-100' },
     { name: 'Sell Gaming', icon: Gamepad2, color: 'bg-teal-100' },
+
+
+
   ];
 
   const features = [
@@ -432,13 +435,15 @@ export default function Home() {
 
       {/* Our Services Section - Mobile First */}
       <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">Our Services</h2>
+            <div className="text-left mb-8">
+              <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">Our Services</h2>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {services.slice(0, 15).map((service, index) => (
+          <div className="grid grid-cols-4 lg:grid-cols-8 gap-2">
+            {services.map((service, index) => (
               <motion.div
                 key={service.name}
                 initial={{ opacity: 0, y: 20 }}
@@ -448,10 +453,10 @@ export default function Home() {
                 className="group cursor-pointer"
               >
                 <Card className="bg-white border border-gray-200 hover:border-teal-400 hover:shadow-lg transition-all duration-300 p-4 text-center group-hover:scale-105 rounded-xl">
-                  <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3 text-teal-600 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3 text-teal-600 group-hover:scale-110 transition-transform duration-300">
                     {React.createElement(service.icon, { className: "w-6 h-6" })}
                   </div>
-                  <h3 className="font-semibold text-black text-sm">{service.name}</h3>
+                  <h3 className="font-semibold text-black text-xs">{service.name}</h3>
                 </Card>
               </motion.div>
             ))}

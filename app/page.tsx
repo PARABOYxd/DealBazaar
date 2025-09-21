@@ -184,7 +184,7 @@ export default function Home() {
               {/* Banner 1 - Sell Phone */}
               <CarouselItem className="basis-full">
                 <div className="bg-teal-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -253,7 +253,7 @@ export default function Home() {
               {/* Banner 2 - Sell Laptop */}
               <CarouselItem className="basis-full">
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -311,7 +311,7 @@ export default function Home() {
               {/* Banner 3 - Sell Furniture */}
               <CarouselItem className="basis-full">
                 <div className="bg-gradient-to-r from-green-600 to-green-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -549,7 +549,7 @@ export default function Home() {
               >
                 <CarouselContent>
                   {testimonials.map((testimonial: import("@/types").Testimonial, index: number) => (
-                    <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/4">
+                    <CarouselItem key={index} className="basis-4/5 sm:basis-1/2 lg:basis-1/4">
                       <div className="p-2 h-full">
                         <Card className="bg-white border border-gray-200 shadow-lg h-full flex flex-col">
                           <CardContent className="p-4 flex flex-col justify-between h-full">

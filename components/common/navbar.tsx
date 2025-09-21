@@ -21,8 +21,8 @@ const navigation = [
   { name: 'Sell Electronics', href: '/products?category=electronics' },
   { name: 'Sell Furniture', href: '/products?category=furniture' },
   { name: 'Sell Appliances', href: '/products?category=home-appliances' },
-  { name: 'Rate List', href: '/rate-list' },
-  { name: 'Schedule Pickup', href: '/pickup-request' },
+  // { name: 'Rate List', href: '/rate-list' }, // commented out as per user request
+  // { name: 'Schedule Pickup', href: '/pickup-request' }, // moved to button below
 ];
 
 interface NavbarProps {
@@ -125,7 +125,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
         {/* Top Bar */}
         <div className="bg-gray-50 py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               {/* Logo */}
               <Link href="/" className="flex items-center space-x-2">
                 <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
@@ -133,7 +133,17 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 </div>
                 <span className="text-teal-600 font-bold text-lg">ELECTRONICPICKUP</span>
               </Link>
-
+              {/* Search Bar */}
+              <div className="flex-1 max-w-xl mx-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for electronics, furniture & more"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
               {/* Right Side - Location & Login */}
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
@@ -153,25 +163,114 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
         </div>
 
         {/* Main Header */}
-        <div className="py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              {/* Search Bar */}
-              <div className="flex-1 max-w-2xl mx-8">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search for electronics, furniture & more"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
+        {/* This section is now removed as per user request */}
 
-              {/* CTA Buttons */}
-              <div className="flex items-center space-x-4">
+        {/* Navigation */}
+        <div className="border-t border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between py-3">
+              {/* Navigation Links */}
+              <nav className="flex items-center space-x-8">
+                {navigation.map((item) => {
+                  if (item.name === 'Sell Electronics') {
+                    return (
+                      <DropdownMenu key={item.name}>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="flex items-center text-sm font-medium">
+                            {item.name}
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=phone">Sell Phone</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=laptop">Sell Laptop</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=gadgets">Sell Gadgets</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=home-appliances">Sell Appliances</Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  }
+                  if (item.name === 'Sell Furniture') {
+                    return (
+                      <DropdownMenu key={item.name}>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="flex items-center text-sm font-medium">
+                            {item.name}
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=sofa">Sell Sofa</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=table">Sell Table</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=chair">Sell Chair</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=bed">Sell Bed</Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  }
+                  if (item.name === 'Sell Appliances') {
+                    return (
+                      <DropdownMenu key={item.name}>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="flex items-center text-sm font-medium">
+                            {item.name}
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=ac">Sell AC</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=fridge">Sell Fridge</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=washing-machine">Sell Washing Machine</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/products?category=microwave">Sell Microwave</Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  }
+                  // Default: normal link
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        'flex items-center text-sm font-medium transition-colors duration-200',
+                        pathname === item.href
+                          ? 'text-teal-600'
+                          : 'text-gray-600 hover:text-teal-500'
+                      )}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+              {/* WhatsApp and Call Buttons */}
+              <div className="flex items-center space-x-4 ml-8">
                 <Button
-                  className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3"
+                  className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2"
                   onClick={openWhatsApp}
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
@@ -179,37 +278,19 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white px-6 py-3"
+                  className="border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white px-4 py-2"
                   onClick={makeCall}
                 >
                   <Phone className="w-4 h-4 mr-2" />
                   Call
                 </Button>
+                <Link href="/pickup-request" className="block">
+                  <Button className="bg-black hover:bg-gray-800 text-white px-4 py-2 ml-2">
+                    Schedule Pickup
+                  </Button>
+                </Link>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="border-t border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex items-center space-x-8 py-3">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center text-sm font-medium transition-colors duration-200',
-                    pathname === item.href
-                      ? 'text-teal-600'
-                      : 'text-gray-600 hover:text-teal-500'
-                  )}
-                >
-                  {item.name}
-                  <ChevronDown className="w-4 h-4 ml-1" />
-                </Link>
-              ))}
-            </nav>
           </div>
         </div>
       </motion.nav>
@@ -249,18 +330,10 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-white border-t border-gray-200 shadow-lg"
+              className="bg-white border-t border-gray-200 shadow-lg max-h-[calc(100vh-56px)] overflow-y-auto pb-24"
             >
               <div className="px-4 py-6 space-y-4">
-                {/* Mobile Search */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search for electronics, furniture & more"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                </div>
+                
 
                 {/* Mobile Navigation */}
                 <div className="space-y-2">
@@ -269,7 +342,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                       key={item.name}
                       href={item.href}
                       className={cn(
-                        'flex items-center justify-between px-4 py-3 text-base font-medium transition-all duration-200 rounded-lg',
+                        'flex items-center justify-between px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg',
                         pathname === item.href
                           ? 'text-teal-600 bg-teal-50'
                           : 'text-gray-600 hover:text-teal-500 hover:bg-gray-50'
@@ -286,7 +359,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 <div className="pt-4 border-t border-gray-200 space-y-3">
                   <Button
                     onClick={openWhatsApp}
-                    className="w-full bg-teal-500 hover:bg-teal-600 text-white flex items-center gap-2 justify-center"
+                    className="w-full bg-teal-500 hover:bg-teal-600 text-white flex items-center gap-2 justify-center py-2 text-sm"
                   >
                     <MessageCircle className="w-4 h-4" />
                     WhatsApp Quote
@@ -294,11 +367,21 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                   <Button
                     onClick={makeCall}
                     variant="outline"
-                    className="w-full border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white flex items-center gap-2 justify-center"
+                    className="w-full border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white flex items-center gap-2 justify-center py-2 text-sm"
                   >
                     <Phone className="w-4 h-4" />
                     Call Now
                   </Button>
+                  <Link
+                    href="/pickup-request"
+                    className="w-full block"
+                  >
+                    <Button
+                      className="w-full bg-black hover:bg-gray-800 text-white flex items-center gap-2 justify-center py-2 text-sm"
+                    >
+                      Schedule Pickup
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>

@@ -206,9 +206,21 @@ export default function Home() {
   return (
     <>
 
+      {/* Mobile Search Bar (moved from Navbar) */}
+      <div className="lg:hidden px-4 py-2">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search for electronics, furniture & more"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+          />
+        </div>
+      </div>
+
       {/* Hero Carousel Section */}
       <section className="relative overflow-hidden">
-        <div className="mt-8 lg:mt-20 xl:mt-24 mx-4 lg:mx-24">
+        <div className="mt-2 lg:mt-16 xl:mt-15 mx-2 lg:mx-32">
           <Carousel
             opts={{
               align: "start",
@@ -221,7 +233,7 @@ export default function Home() {
               {/* Banner 1 - Sell Phone */}
               <CarouselItem className="basis-full">
                 <div className="bg-teal-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-12">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -258,7 +270,7 @@ export default function Home() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="relative flex justify-center lg:justify-end"
                       >
-                        <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-64 lg:w-72 lg:h-80">
+                        <div className="relative w-32 h-32 sm:w-40 sm:h-48 md:w-60 md:h-56 lg:w-72 lg:h-72">
                           {/* Phone Outline */}
                           <div className="absolute inset-0 bg-black rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
                             <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
@@ -290,7 +302,7 @@ export default function Home() {
               {/* Banner 2 - Sell Laptop */}
               <CarouselItem className="basis-full">
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-12">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -327,7 +339,7 @@ export default function Home() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="relative flex justify-center lg:justify-end"
                       >
-                        <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-64 lg:w-72 lg:h-80">
+                        <div className="relative w-32 h-32 sm:w-40 sm:h-48 md:w-60 md:h-56 lg:w-72 lg:h-72">
                           {/* Laptop Outline */}
                           <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
                             <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
@@ -348,7 +360,7 @@ export default function Home() {
               {/* Banner 3 - Sell Furniture */}
               <CarouselItem className="basis-full">
                 <div className="bg-gradient-to-r from-green-600 to-green-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-12">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -385,7 +397,7 @@ export default function Home() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="relative flex justify-center lg:justify-end"
                       >
-                        <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-64 lg:w-72 lg:h-80">
+                        <div className="relative w-32 h-32 sm:w-40 sm:h-48 md:w-60 md:h-56 lg:w-72 lg:h-72">
                           {/* Furniture Outline */}
                           <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
                             <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
@@ -426,7 +438,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {services.slice(0, 4).map((service, index) => (
+            {services.slice(0, 15).map((service, index) => (
               <motion.div
                 key={service.name}
                 initial={{ opacity: 0, y: 20 }}

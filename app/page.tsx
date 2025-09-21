@@ -54,23 +54,37 @@ import { getHomePageData, type HomePageData } from '@/lib/api';
 import LazyProductSection from '@/components/common/lazy-product-section';
 
 export default function Home() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
-
-  const [api, setApi] = React.useState<CarouselApi>();
-  const { ref, inView } = useInView();
+  const heroAutoplay = React.useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
+  const [heroApi, setHeroApi] = React.useState<CarouselApi>();
+  const { ref: heroCarouselRef, inView: heroCarouselInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-    if (inView) {
-      api.plugins().autoplay?.play();
+    if (!heroApi) return;
+    if (heroCarouselInView) {
+      heroApi.plugins().autoplay?.play();
     } else {
-      api.plugins().autoplay?.stop();
+      heroApi.plugins().autoplay?.stop();
     }
-  }, [api, inView]);
+  }, [heroApi, heroCarouselInView]);
+
+  const testimonialAutoplay = React.useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+  const [testimonialApi, setTestimonialApi] = React.useState<CarouselApi>();
+  const { ref: testimonialCarouselRef, inView: testimonialCarouselInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  React.useEffect(() => {
+    if (!testimonialApi) return;
+    if (testimonialCarouselInView) {
+      testimonialApi.plugins().autoplay?.play();
+    } else {
+      testimonialApi.plugins().autoplay?.stop();
+    }
+  }, [testimonialApi, testimonialCarouselInView]);
 
   const { data: homeData = {} as HomePageData } = useQuery<HomePageData>({
     queryKey: ['homePageData'],
@@ -155,14 +169,15 @@ export default function Home() {
       </div>
 
       {/* Hero Carousel Section */}
-      <section ref={ref} className="relative overflow-hidden">
+      <section ref={heroCarouselRef} className="relative overflow-hidden">
         <div className="mt-2 lg:mt-16 xl:mt-15 mx-2 lg:mx-32">
           <Carousel
+            setApi={setHeroApi}
             opts={{
               align: "start",
               loop: true,
             }}
-            plugins={[plugin.current]}
+            plugins={[heroAutoplay.current]}
             className="w-full"
           >
             <CarouselContent>
@@ -367,7 +382,7 @@ export default function Home() {
       </section>
 
       {/* Our Services Section - Mobile First */}
-      <section className="py-12 bg-white mx-auto md:mx-32 lg:mx-32">
+      <section className="pt-12 bg-white mx-auto md:mx-32 lg:mx-30">
         <div className="mx-auto px-4">
           <div className="text-center mb-6">
             <div className="text-left mb-6">
@@ -518,18 +533,18 @@ export default function Home() {
 
           {/* Testimonials */}
           {testimonials.length > 0 && (
-            <div className="relative">
+            <div className="relative" ref={testimonialCarouselRef}>
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-white mb-4">What Our Customers Say</h3>
               </div>
 
               <Carousel
-                setApi={setApi}
+                setApi={setTestimonialApi}
                 opts={{
                   align: "start",
                   loop: true,
                 }}
-                plugins={[plugin.current]}
+                plugins={[testimonialAutoplay.current]}
                 className="w-full max-w-6xl mx-auto"
               >
                 <CarouselContent>

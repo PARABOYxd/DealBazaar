@@ -14,6 +14,7 @@ interface Props {
 interface State {
     hasError: boolean;
     error?: Error;
+    errorId?: string;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -27,17 +28,19 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error('Error caught by boundary:', error, errorInfo);
+        const errorId = Math.random().toString(36).substring(2, 9);
+        this.setState({ errorId });
+        console.error(`Error ID: ${errorId}`, error, errorInfo);
 
         // Log to error reporting service
         if (process.env.NODE_ENV === 'production') {
             // Example: Send to error reporting service
-            // errorReportingService.captureException(error, { extra: errorInfo });
+            // errorReportingService.captureException(error, { extra: { ...errorInfo, errorId } });
         }
     }
 
     handleRetry = () => {
-        this.setState({ hasError: false, error: undefined });
+        this.setState({ hasError: false, error: undefined, errorId: undefined });
     };
 
     handleGoHome = () => {
@@ -73,10 +76,14 @@ export class ErrorBoundary extends Component<Props, State> {
                                 </div>
 
                                 {process.env.NODE_ENV === 'development' && this.state.error && (
-                                    <div className="p-4 bg-muted rounded-lg text-left">
+                                    <div className="p-4 bg-muted rounded-lg text-left overflow-auto">
+                                        <h3 className="font-bold mb-2">Error Details:</h3>
                                         <p className="text-sm font-mono text-destructive">
                                             {this.state.error.message}
                                         </p>
+                                        <pre className="text-xs font-mono text-muted-foreground mt-2 whitespace-pre-wrap">
+                                            {this.state.error.stack}
+                                        </pre>
                                     </div>
                                 )}
 
@@ -99,7 +106,7 @@ export class ErrorBoundary extends Component<Props, State> {
                                 </div>
 
                                 <div className="text-xs text-muted-foreground">
-                                    Error ID: {Date.now().toString(36)}
+                                    Error ID: {this.state.errorId}
                                 </div>
                             </CardContent>
                         </Card>

@@ -55,7 +55,7 @@ import LazyProductSection from '@/components/common/lazy-product-section';
 
 export default function Home() {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })
+    Autoplay({ delay: 2000, stopOnInteraction: true })
   );
 
   const [api, setApi] = React.useState<CarouselApi>();
@@ -92,7 +92,10 @@ export default function Home() {
     window.open(`tel:${phoneNumber}`, '_self');
   };
 
-  const getInitials = (name: string) => {
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) {
+      return '';
+    }
     const names = name.split(' ');
     const firstName = names[0] ?? '';
     const lastName = names.length > 1 ? names[names.length - 1] : '';
@@ -152,7 +155,7 @@ export default function Home() {
       </div>
 
       {/* Hero Carousel Section */}
-      <section className="relative overflow-hidden">
+      <section ref={ref} className="relative overflow-hidden">
         <div className="mt-2 lg:mt-16 xl:mt-15 mx-2 lg:mx-32">
           <Carousel
             opts={{

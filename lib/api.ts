@@ -203,3 +203,26 @@ class ApiService {
 }
 
 export const apiService = new ApiService();
+
+export interface HomePageData {
+  electronics: Product[];
+  homeAppliances: Product[];
+  furniture: Product[];
+  testimonials: Testimonial[];
+}
+
+// Batched homepage data fetcher
+export async function getHomePageData(): Promise<HomePageData> {
+  const [electronics, homeAppliances, furniture, testimonials] = await Promise.all([
+    apiService.getProducts({ category: 'electronics' }),
+    apiService.getProducts({ category: 'home-appliances' }),
+    apiService.getProducts({ category: 'furniture' }),
+    apiService.getTestimonials(9),
+  ]);
+  return {
+    electronics: electronics?.data || [],
+    homeAppliances: homeAppliances?.data || [],
+    furniture: furniture?.data || [],
+    testimonials: testimonials?.data || [],
+  };
+}

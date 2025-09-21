@@ -12,12 +12,14 @@ import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useDebounce } from '@/hooks/use-debounce';
+import { LoginModal } from '@/components/common/login-modal';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category');
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 1500);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const searchTermToUse = debouncedSearchTerm.length >= 2 ? debouncedSearchTerm : '';
 
@@ -65,19 +67,14 @@ export default function ProductsPage() {
   const pageTitle = category ? `${category} Products` : 'All Products';
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-white min-h-screen">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+    <div className="min-h-screen bg-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Button variant="ghost" className="mb-6 text-teal-600 hover:text-teal-700" asChild>
           <Link href="/">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Link>
         </Button>
-
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           <h1 className="text-4xl font-bold text-black">{pageTitle}</h1>
           <div className="relative w-full md:w-1/3">
@@ -91,7 +88,6 @@ export default function ProductsPage() {
             />
           </div>
         </div>
-
         {status === 'pending' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -128,7 +124,6 @@ export default function ProductsPage() {
                 ))}
               </div>
             )}
-
             <div className="flex justify-center mt-10">
               {hasNextPage && (
                 <div ref={ref} className="w-full h-10 flex justify-center items-center">
@@ -141,7 +136,8 @@ export default function ProductsPage() {
             </div>
           </>
         )}
-      </motion.div>
+        <LoginModal open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+      </div>
     </div>
   );
 }

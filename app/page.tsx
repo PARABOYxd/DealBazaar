@@ -37,7 +37,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ProductCard } from '@/components/cards/product-card';
 import { apiService } from '@/lib/api';
 import { generateSEO } from '@/lib/seo';
 import {
@@ -51,60 +50,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Autoplay from "embla-carousel-autoplay";
 import { useInView } from 'react-intersection-observer';
-import { Product } from '@/types';
-
-interface ProductSectionProps {
-  title: string;
-  products: Product[];
-  whatsappNumber: string;
-}
-
-const ProductSection = ({ title, products, whatsappNumber }: ProductSectionProps) => {
-  const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })
-  );
-
-  return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-bold text-black mb-2">{title}</h2>
-            <p className="text-gray-600">Best prices guaranteed</p>
-          </div>
-          <Button variant="outline" asChild className="border-black text-black hover:bg-black hover:text-white">
-            <Link href="/products">
-              View All
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
-        </div>
-
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          plugins={[plugin.current]}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {Array.isArray(products) && products.map((product) => (
-              <CarouselItem key={product.id} className="pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard
-                  product={product}
-                  whatsappNumber={whatsappNumber}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="left-4" />
-          <CarouselNext className="right-4" />
-        </Carousel>
-      </div>
-    </section>
-  );
-};
+import { getHomePageData, type HomePageData } from '@/lib/api';
+import LazyProductSection from '@/components/common/lazy-product-section';
 
 export default function Home() {
   const plugin = React.useRef(
@@ -125,30 +72,13 @@ export default function Home() {
     }
   }, [api, inView]);
 
-  const { data: electronicsData } = useQuery({
-    queryKey: ['products', 'electronics'],
-    queryFn: () => apiService.getProducts({ category: 'electronics' }),
+  const { data: homeData = {} as HomePageData } = useQuery<HomePageData>({
+    queryKey: ['homePageData'],
+    queryFn: () => getHomePageData(),
+    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
-  const { data: homeAppliancesData } = useQuery({
-    queryKey: ['products', 'home-appliances'],
-    queryFn: () => apiService.getProducts({ category: 'home-appliances' }),
-  });
-
-  const { data: furnitureData } = useQuery({
-    queryKey: ['products', 'furniture'],
-    queryFn: () => apiService.getProducts({ category: 'furniture' }),
-  });
-
-  const { data: testimonialsData } = useQuery({
-    queryKey: ['testimonials'],
-    queryFn: () => apiService.getTestimonials(9),
-  });
-
-  const electronics = electronicsData?.data || [];
-  const homeAppliances = homeAppliancesData?.data || [];
-  const furniture = furnitureData?.data || [];
-  const testimonials = testimonialsData?.data || [];
+  const testimonials = homeData.testimonials || [];
 
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210';
   const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '+919876543210';
@@ -434,10 +364,10 @@ export default function Home() {
       </section>
 
       {/* Our Services Section - Mobile First */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-white mx-auto md:mx-32 lg:mx-32">
         <div className="mx-auto px-4">
-          <div className="text-center mb-8">
-            <div className="text-left mb-8">
+          <div className="text-center mb-6">
+            <div className="text-left mb-6">
               <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">Our Services</h2>
             </div>
           </div>
@@ -467,15 +397,9 @@ export default function Home() {
 
 
       {/* Product Sections */}
-      {electronics.length > 0 && (
-        <ProductSection title="Electronics" products={electronics} whatsappNumber={whatsappNumber} />
-      )}
-      {homeAppliances.length > 0 && (
-        <ProductSection title="Home Appliances" products={homeAppliances} whatsappNumber={whatsappNumber} />
-      )}
-      {furniture.length > 0 && (
-        <ProductSection title="Furniture" products={furniture} whatsappNumber={whatsappNumber} />
-      )}
+      <LazyProductSection title="Electronics" category="electronics" whatsappNumber={whatsappNumber} />
+      <LazyProductSection title="Home Appliances" category="home-appliances" whatsappNumber={whatsappNumber} />
+      <LazyProductSection title="Furniture" category="furniture" whatsappNumber={whatsappNumber} />
 
       {/* Why Choose Us Section */}
       <section className="py-16 bg-gray-50">
@@ -606,7 +530,7 @@ export default function Home() {
                 className="w-full max-w-6xl mx-auto"
               >
                 <CarouselContent>
-                  {testimonials.map((testimonial, index) => (
+                  {testimonials.map((testimonial: import("@/types").Testimonial, index: number) => (
                     <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/4">
                       <div className="p-2 h-full">
                         <Card className="bg-white border border-gray-200 shadow-lg h-full flex flex-col">

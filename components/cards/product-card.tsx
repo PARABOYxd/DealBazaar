@@ -58,9 +58,9 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
       viewport={{ once: true }}
       whileHover={{ y: -4, scale: 1.02 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className={cn("group", className)}
+      className={cn("group h-full", className)}
     >
-      <Card className="bg-white border border-gray-200 shadow-lg hover:shadow-xl overflow-hidden h-full transition-all duration-300 rounded-xl">
+      <Card className="bg-white border border-gray-200 shadow-lg hover:shadow-xl overflow-hidden h-full transition-all duration-300 rounded-xl flex flex-col">
         {/* Product Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
           <Image
@@ -79,9 +79,9 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
           )}
         </div>
 
-        <CardContent className="p-4 space-y-3">
+        <CardContent className="p-4 space-y-3 flex-grow flex flex-col">
           {/* Product Name */}
-          <h3 className="font-bold text-black text-sm leading-tight">
+          <h3 className="font-bold text-black text-sm leading-tight flex-grow">
             {product.name}
           </h3>
 
@@ -116,7 +116,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
           {/* Action Button */}
           <Button
             onClick={openWhatsApp}
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2"
+            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 mt-auto"
           >
             <MessageCircle className="w-4 h-4 mr-2" />
             Get Quote

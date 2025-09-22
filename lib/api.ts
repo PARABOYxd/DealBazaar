@@ -6,16 +6,19 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 class ApiService {
   private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T) {
     try {
+      const headers = new Headers(options?.headers);
+      if (!headers.has('Content-Type')) {
+        headers.set('Content-Type', 'application/json');
+      }
+
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {};
+      if (token && !headers.has('Authorization')) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader,
-          ...options?.headers,
-        },
         ...options,
+        headers,
       });
 
       // Handle 401 Unauthorized specifically

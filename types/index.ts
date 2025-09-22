@@ -107,11 +107,14 @@ export interface ApiResponse<T> {
   pagination?: Pagination;
 }
 
+export type UserState = "INITIATED" | "VERIFIED" | "STEP1" | "COMPLETED";
+
 export interface User {
   id: string;
   name: string;
   email: string;
   phoneNumber: string;
+  status: UserState;
   avatar?: string;
   createdAt: string;
   lastLoginAt: string;

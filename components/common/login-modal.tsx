@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { apiService } from '@/lib/api';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/components/providers/auth-provider';
+import { UserState } from '@/types';
 
 
 interface LoginModalProps {
@@ -13,9 +14,6 @@ interface LoginModalProps {
     onOpenChange: (open: boolean) => void;
     onSuccess?: () => void;
 }
-
-// Define user states from backend
-type UserState = "INITIATED" | "VERIFIED" | "STEP1" | "COMPLETED";
 
 export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
     const { login, isAuthenticated, user } = useAuth(); // Access isAuthenticated and user

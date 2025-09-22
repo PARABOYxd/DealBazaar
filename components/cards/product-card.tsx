@@ -29,6 +29,15 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
   // Simple pricing display without random generation
   const showPricing = product.estimatePriceMin && product.estimatePriceMax;
 
+  const getImageUrl = (path?: string) => {
+    if (!path) return '/images/placeholder-product.jpg';
+    if (path.startsWith('http')) return path;
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+    return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
+  };
+
+  const imageUrl = getImageUrl(product.images?.[0]);
+
   const conditionColors = {
     excellent: 'bg-green-100 text-green-800 border-green-200',
     good: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -53,13 +62,13 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
     >
       <Card className="bg-white border border-gray-200 shadow-lg hover:shadow-xl overflow-hidden h-full transition-all duration-300 rounded-xl">
         {/* Product Image */}
-        <div className="relative aspect-square overflow-hidden bg-gray-100">
+        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
           <Image
-            src={(product.images && product.images[0]) || '/images/placeholder-product.jpg'}
+            src={imageUrl}
             alt={product.name}
             fill
             className={cn(
-              "object-cover transition-all duration-500 group-hover:scale-110",
+              "object-contain transition-all duration-500 group-hover:scale-110",
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

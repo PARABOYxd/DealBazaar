@@ -32,7 +32,7 @@ export function LayoutWrapper({ children, contactInfo }: LayoutWrapperProps) {
         />
       )}
 
-      <main className={!isSignupRoute ? "pt-20 pb-20 lg:pt-24 lg:pb-0" : ""}>
+            <main className={!isSignupRoute ? "pt-20 lg:pt-24" : ""}>
         {children}
       </main>
 

@@ -30,12 +30,15 @@ const saveAuthData = (token: string, user: User, expiresIn: number = 24 * 60 * 6
   localStorage.setItem(AUTH_TOKEN_KEY, token);
   localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
   localStorage.setItem(TOKEN_EXPIRY_KEY, expiry.toString());
+  console.log('Token saved to localStorage:', token);
+  console.log('User data saved to localStorage:', user);
 };
 
-const clearAuthData = () => {
+export const clearAuthData = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(USER_DATA_KEY);
   localStorage.removeItem(TOKEN_EXPIRY_KEY);
+  console.log('Auth data cleared from localStorage.');
 };
 
 const getStoredAuthData = (): { token: string | null; user: User | null; isValid: boolean } => {
@@ -103,12 +106,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (token: string) => {
     try {
+      console.log('Calling apiService.getMe with token:', token); // Added log
       const userResponse = await apiService.getMe(token);
+      console.log('Response from apiService.getMe:', userResponse); // Added log
       if (userResponse.success && userResponse.data) {
+        console.log('User data received, calling loginWithUserData.'); // Added log
         loginWithUserData(userResponse.data, token);
+      } else {
+        console.log('apiService.getMe did not return success or data. Logging out.'); // Added log
+        logout();
       }
     } catch (error) {
-      console.error('Failed to login', error);
+      console.error('Failed to login (apiService.getMe error):', error); // Modified log
       logout();
     }
   };

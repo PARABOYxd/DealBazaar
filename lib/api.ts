@@ -1,17 +1,31 @@
 import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo, User } from '@/types';
+import { clearAuthData } from '@/components/providers/auth-provider';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class ApiService {
   private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T) {
     try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {};
+
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
+          ...authHeader,
           ...options?.headers,
         },
         ...options,
       });
+
+      // Handle 401 Unauthorized specifically
+      if (response.status === 401) {
+        if (typeof window !== 'undefined') {
+          clearAuthData(); // Clear authentication data
+          window.location.href = '/signup'; // Redirect to login page
+        }
+        throw new Error('Unauthorized: Redirecting to login.');
+      }
 
       // try to parse JSON (backend returns { status, data, pagination, message, error })
       const json = await response.json().catch(() => null);
@@ -66,6 +80,45 @@ class ApiService {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobileNumber, otp }),
+    });
+    return res.json();
+  }
+
+  async updateProfile(profileData: { name: string; dob: string; gender: string }): Promise<any> {
+    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    if (!token) {
+      throw new Error('No authentication token found.');
+    }
+    const res = await fetch(`${API_BASE_URL}/customer/update-profile`, {
+      method: 'PUT', // Assuming PUT for update
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(profileData),
+    });
+    return res.json();
+  }
+
+  async updateAddress(addressData: {
+    baseAddress: string;
+    postOfficeName: string;
+    pincode: string;
+    city: string;
+    district: string;
+    state: string;
+  }): Promise<any> {
+    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    if (!token) {
+      throw new Error('No authentication token found.');
+    }
+    const res = await fetch(`${API_BASE_URL}/customer/update-address`, {
+      method: 'PUT', // Assuming PUT for update
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(addressData),
     });
     return res.json();
   }

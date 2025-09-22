@@ -31,7 +31,7 @@ const ProductSection = ({ title, products, whatsappNumber }: ProductSectionProps
   );
 
   return (
-    <section className="pt-8 bg-white">
+    <section className="pt-6 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -64,8 +64,8 @@ const ProductSection = ({ title, products, whatsappNumber }: ProductSectionProps
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4" />
-          <CarouselNext className="right-4" />
+          {/* <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" /> */}
         </Carousel>
       </div>
     </section>
@@ -125,7 +125,7 @@ const LazyProductSection = ({ title, category, whatsappNumber }: LazyProductSect
 
   if (isError) {
     return (
-      <div ref={ref} className="pt-8 bg-white">
+      <div ref={ref} className="pt-6 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-black mb-2">{title}</h2>
           <p>Could not load products.</p>

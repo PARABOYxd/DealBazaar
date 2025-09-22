@@ -54,23 +54,37 @@ import { getHomePageData, type HomePageData } from '@/lib/api';
 import LazyProductSection from '@/components/common/lazy-product-section';
 
 export default function Home() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
-
-  const [api, setApi] = React.useState<CarouselApi>();
-  const { ref, inView } = useInView();
+  const heroAutoplay = React.useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
+  const [heroApi, setHeroApi] = React.useState<CarouselApi>();
+  const { ref: heroCarouselRef, inView: heroCarouselInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-    if (inView) {
-      api.plugins().autoplay?.play();
+    if (!heroApi) return;
+    if (heroCarouselInView) {
+      heroApi.plugins().autoplay?.play();
     } else {
-      api.plugins().autoplay?.stop();
+      heroApi.plugins().autoplay?.stop();
     }
-  }, [api, inView]);
+  }, [heroApi, heroCarouselInView]);
+
+  const testimonialAutoplay = React.useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+  const [testimonialApi, setTestimonialApi] = React.useState<CarouselApi>();
+  const { ref: testimonialCarouselRef, inView: testimonialCarouselInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  React.useEffect(() => {
+    if (!testimonialApi) return;
+    if (testimonialCarouselInView) {
+      testimonialApi.plugins().autoplay?.play();
+    } else {
+      testimonialApi.plugins().autoplay?.stop();
+    }
+  }, [testimonialApi, testimonialCarouselInView]);
 
   const { data: homeData = {} as HomePageData } = useQuery<HomePageData>({
     queryKey: ['homePageData'],
@@ -155,21 +169,22 @@ export default function Home() {
       </div>
 
       {/* Hero Carousel Section */}
-      <section ref={ref} className="relative overflow-hidden">
+      <section ref={heroCarouselRef} className="relative overflow-hidden">
         <div className="mt-2 lg:mt-16 xl:mt-15 mx-2 lg:mx-32">
           <Carousel
+            setApi={setHeroApi}
             opts={{
               align: "start",
               loop: true,
             }}
-            plugins={[plugin.current]}
+            plugins={[heroAutoplay.current]}
             className="w-full"
           >
             <CarouselContent>
               {/* Banner 1 - Sell Phone */}
               <CarouselItem className="basis-full">
                 <div className="bg-teal-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -238,7 +253,7 @@ export default function Home() {
               {/* Banner 2 - Sell Laptop */}
               <CarouselItem className="basis-full">
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -296,7 +311,7 @@ export default function Home() {
               {/* Banner 3 - Sell Furniture */}
               <CarouselItem className="basis-full">
                 <div className="bg-gradient-to-r from-green-600 to-green-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 lg:py-8">
+                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
                       <motion.div
@@ -367,7 +382,7 @@ export default function Home() {
       </section>
 
       {/* Our Services Section - Mobile First */}
-      <section className="py-12 bg-white mx-auto md:mx-32 lg:mx-32">
+      <section className="pt-12 bg-white mx-auto md:mx-32 lg:mx-30">
         <div className="mx-auto px-4">
           <div className="text-center mb-6">
             <div className="text-left mb-6">
@@ -443,31 +458,31 @@ export default function Home() {
             <p className="text-gray-600 text-lg">Simple 4-step process to sell your items</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
             {[
               {
                 step: '1',
                 title: 'Submit Request',
                 description: 'Contact us via WhatsApp with item details and photos',
-                icon: <MessageCircle className="w-8 h-8" />,
+                icon: <MessageCircle className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
               {
                 step: '2',
                 title: 'Get Quote',
                 description: 'Receive instant price quote based on market value',
-                icon: <DollarSign className="w-8 h-8" />,
+                icon: <DollarSign className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
               {
                 step: '3',
                 title: 'Schedule Pickup',
                 description: 'Choose convenient time for free doorstep pickup',
-                icon: <Truck className="w-8 h-8" />,
+                icon: <Truck className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
               {
                 step: '4',
                 title: 'Get Paid',
                 description: 'Receive payment instantly after verification',
-                icon: <CheckCircle className="w-8 h-8" />,
+                icon: <CheckCircle className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
             ].map((item, index) => (
               <motion.div
@@ -478,15 +493,15 @@ export default function Home() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <Card className="bg-white border border-gray-200 p-8 h-full">
-                  <div className="w-20 h-20 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white">
+                <Card className="bg-white border border-gray-200 p-4 lg:p-8 h-full">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 lg:mb-6 text-white">
                     {item.icon}
                   </div>
                   <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-sm">
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-bold text-black mb-3">{item.title}</h3>
-                  <p className="text-gray-600">{item.description}</p>
+                  <h3 className="text-lg lg:text-xl font-bold text-black mb-3">{item.title}</h3>
+                  <p className="text-sm text-gray-600">{item.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -518,42 +533,42 @@ export default function Home() {
 
           {/* Testimonials */}
           {testimonials.length > 0 && (
-            <div className="relative">
+            <div className="relative" ref={testimonialCarouselRef}>
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-white mb-4">What Our Customers Say</h3>
               </div>
 
               <Carousel
-                setApi={setApi}
+                setApi={setTestimonialApi}
                 opts={{
                   align: "start",
                   loop: true,
                 }}
-                plugins={[plugin.current]}
+                plugins={[testimonialAutoplay.current]}
                 className="w-full max-w-6xl mx-auto"
               >
                 <CarouselContent>
                   {testimonials.map((testimonial: import("@/types").Testimonial, index: number) => (
-                    <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/4">
+                    <CarouselItem key={index} className="basis-4/5 sm:basis-1/2 lg:basis-1/4">
                       <div className="p-2 h-full">
-                        <Card className="bg-white border border-gray-200 shadow-lg h-full flex flex-col">
+                                                                        <Card className="bg-white border border-gray-200 shadow-lg h-full flex flex-col">
                           <CardContent className="p-4 flex flex-col justify-between h-full">
                             <div>
-                              <div className="text-3xl text-blue-500 mb-2">"</div>
-                              <p className="text-gray-600 mb-4 text-sm min-h-[48px] line-clamp-3">
+                              <div className="text-3xl text-blue-600 mb-2">"</div>
+                              <p className="text-gray-800 mb-4 text-sm min-h-[48px] line-clamp-3">
                                 {testimonial.comment}
                               </p>
                             </div>
                             <div className="flex items-center space-x-3 mt-auto">
                               <Avatar className="w-8 h-8">
                                 <AvatarImage src={testimonial.image} alt={testimonial.name} />
-                                <AvatarFallback className="bg-teal-100 text-teal-700 font-semibold">
+                                <AvatarFallback className="bg-teal-200 text-teal-800 font-semibold">
                                   {getInitials(testimonial.name)}
                                 </AvatarFallback>
                               </Avatar>
                               <div>
                                 <div className="font-bold text-black text-xs">{testimonial.name}</div>
-                                <div className="text-xs text-gray-600">{testimonial.location}</div>
+                                <div className="text-xs text-gray-800">{testimonial.location}</div>
                               </div>
                             </div>
                           </CardContent>

@@ -114,12 +114,47 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                   <span>{isLocating ? 'Locating...' : location}</span>
                   <ChevronDown className="w-4 h-4" />
                 </div>
-                <Button
-                  className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 text-sm"
-                  onClick={handleLogin}
-                >
-                  Login
-                </Button>
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={user?.avatar || "/placeholder-avatar.jpg"} alt="@shadcn" />
+                          <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                      <DropdownMenuItem className="flex flex-col items-start space-y-1">
+                        <p className="text-sm font-medium leading-none">{user?.name || "User"}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user?.email || user?.phone || ""}
+                        </p>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={logout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button
+                    className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 text-sm"
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -402,16 +437,41 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
             <Phone className="w-6 h-6 mb-1" />
             <span className="text-xs font-medium">Contact Us</span>
           </Link>
-          <button
-            onClick={handleLogin}
-            className={cn(
-              'flex flex-col items-center py-2 px-3 transition-colors',
-              isAuthenticated ? 'text-teal-500' : 'text-gray-600'
-            )}
-          >
-            <User className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Profile</span>
-          </button>
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={cn(
+                    'flex flex-col items-center py-2 px-3 transition-colors',
+                    isAuthenticated ? 'text-teal-500' : 'text-gray-600'
+                  )}
+                >
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={user?.avatar || "/placeholder-avatar.jpg"} alt="@shadcn" />
+                    <AvatarFallback className="text-xs">{user?.name?.charAt(0) || "U"}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs font-medium mt-1">{user?.name?.split(' ')[0] || "Profile"}</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48" align="end" forceMount>
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className={cn(
+                'flex flex-col items-center py-2 px-3 transition-colors',
+                pathname === '/login' ? 'text-teal-500' : 'text-gray-600'
+              )}
+            >
+              <User className="w-6 h-6 mb-1" />
+              <span className="text-xs font-medium">Login</span>
+            </button>
+          )}
         </div>
       </div>
 

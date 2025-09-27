@@ -125,6 +125,14 @@ export interface User {
   avatar?: string;
   createdAt: string;
   lastLoginAt: string;
+  dob?: string;
+  gender?: string;
+  baseAddress?: string;
+  postOfficeName?: string;
+  pincode?: string;
+  city?: string;
+  district?: string;
+  state?: string;
 }
 
 export interface UpdateProfileRequest {

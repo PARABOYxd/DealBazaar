@@ -1,4 +1,4 @@
-import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo, User } from '@/types';
+import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
 import { clearAuthData } from '@/components/providers/auth-provider';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -72,7 +72,7 @@ class ApiService {
 
   // OTP
   async sendOtp(mobileNumber: string): Promise<any> {
-    const res = await fetch(`${API_BASE_URL}/customer/login`, {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobileNumber }),
@@ -80,7 +80,7 @@ class ApiService {
     return res.json();
   }
   async verifyOtp(mobileNumber: string, otp: string): Promise<any> {
-    const res = await fetch(`${API_BASE_URL}/customer/verify-otp`, {
+    const res = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobileNumber, otp }),
@@ -127,13 +127,7 @@ class ApiService {
     return res.json();
   }
 
-  async getMe(token: string): Promise<ApiResponse<User>> {
-    return this.fetchApi(`/customer/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
+  
 
   // Products
   async getProducts(filters?: {
@@ -264,6 +258,15 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
+  }
+
+  async refreshToken(refreshToken: string): Promise<ApiResponse<{ accessToken: string; refreshToken?: string }>> {
+    const res = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    return res.json();
   }
 }
 

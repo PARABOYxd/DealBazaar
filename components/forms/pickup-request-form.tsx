@@ -408,7 +408,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:flex-1"
+                className="w-full sm:flex-1 bg-black text-white hover:bg-black/80"
               >
                 {isSubmitting ? 'Submitting...' : 'Schedule Pickup'}
               </Button>

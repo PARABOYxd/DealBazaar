@@ -248,7 +248,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                   Call
                 </Button>
                 <Link href="/pickup-request" className="block">
-                  <Button className="ml-2">
+                  <Button className="ml-2 bg-black text-white hover:bg-black/80">
                     Schedule Pickup
                   </Button>
                 </Link>

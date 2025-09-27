@@ -109,6 +109,13 @@ export interface ApiResponse<T> {
 
 export type UserState = "INITIATED" | "VERIFIED" | "STEP1" | "COMPLETED";
 
+export interface AuthResponse {
+  accessToken: string;
+  expiresIn: number;
+  status: UserState;
+  isNew: boolean;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -118,6 +125,27 @@ export interface User {
   avatar?: string;
   createdAt: string;
   lastLoginAt: string;
+}
+
+export interface UpdateProfileRequest {
+  name: string;
+  dob: string;
+  gender: string;
+}
+
+export interface UpdateAddressRequest {
+  baseAddress: string;
+  postOfficeName: string;
+  pincode: string;
+  city: string;
+  district: string;
+  state: string;
+}
+
+export interface ApiSuccessResponse<T> {
+  status: number;
+  message?: string;
+  data?: T[];
 }
 
 export interface LoginResponse {

@@ -19,8 +19,7 @@ import Image from 'next/image';
 import { useAuth } from '@/components/providers/auth-provider';
 
 const pickupSchema = z.object({
-  email: z.string().email('Invalid email address').optional(),
-  address: z.string().min(10, 'Address must be at least 10 characters'),
+  // Removed address and email from schema as requested
   items: z.array(z.object({
     category: z.string().min(1, 'Category is required'),
     description: z.string().min(5, 'Description must be at least 5 characters'),
@@ -57,7 +56,6 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
     resolver: zodResolver(pickupSchema),
     defaultValues: {
       items: [{ category: '', description: '', quantity: 1, condition: '' }],
-      email: user?.email || '',
     },
   });
 
@@ -132,6 +130,9 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
         ...data,
         customerName: user.name,
         phone: user.phoneNumber || '', // Assuming phone number is in user object
+        // Address and email removed from form but backend requires address; use user data or fallback
+        address: (user as any)?.address || '',
+        email: (user as any)?.email || undefined,
         city: 'N/A', // City is not in user object, to be discussed
         pincode: 'N/A', // Pincode is not in user object, to be discussed
         images: imageUrls,
@@ -189,7 +190,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl mx-auto"
+      className="max-w-2xl mx-auto px-4 sm:px-0"
     >
       <Card>
         <CardHeader className="text-center">
@@ -199,7 +200,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
           </p>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="p-4 sm:p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {submitError && (
                 <Alert variant="destructive">
@@ -208,33 +209,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
                     <AlertDescription>{submitError}</AlertDescription>
                 </Alert>
             )}
-            {/* Address Information */}
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="address">Address *</Label>
-                <Textarea
-                  id="address"
-                  {...register('address')}
-                  placeholder="Enter your complete address"
-                  rows={2}
-                />
-                {errors.address && (
-                  <p className="text-sm text-red-600 mt-1">{errors.address.message}</p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  placeholder="your.email@example.com"
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-                )}
-              </div>
-            </div>
+            {/* Address and Email fields removed as requested */}
 
             {/* Items */}
             <div className="space-y-4">
@@ -433,7 +408,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1"
+                className="w-full sm:flex-1"
               >
                 {isSubmitting ? 'Submitting...' : 'Schedule Pickup'}
               </Button>
@@ -441,7 +416,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
                 type="button"
                 variant="outline"
                 onClick={openWhatsApp}
-                className="flex-1 sm:flex-initial"
+                className="w-full sm:w-auto"
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Quick WhatsApp

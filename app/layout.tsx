@@ -7,6 +7,7 @@ import { Footer } from '@/components/common/footer';
 import { FloatingActions } from '@/components/common/floating-actions';
 import { Schema } from '@/components/ui/schema';
 import { generateLocalBusinessSchema } from '@/lib/seo';
+import contactConfig from '@/lib/config';
 import { LayoutWrapper } from '@/components/common/layout-wrapper';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import { PerformanceMonitor } from '@/components/common/performance-monitor';
@@ -48,16 +49,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Static contact info - in production, this would come from your Java backend
-const contactInfo = {
-  phone: process.env.NEXT_PUBLIC_PHONE_NUMBER || '+919876543210',
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210',
-  email: process.env.NEXT_PUBLIC_EMAIL || 'info@electrofurni.com',
-  address: process.env.NEXT_PUBLIC_ADDRESS || '123 Business Street, Andheri East',
-  city: process.env.NEXT_PUBLIC_CITY || 'Mumbai',
-  state: process.env.NEXT_PUBLIC_STATE || 'Maharashtra',
-  pincode: process.env.NEXT_PUBLIC_PINCODE || '400093',
-};
+// Centralized contact info
+const contactInfo = contactConfig;
 
 export default function RootLayout({
   children,

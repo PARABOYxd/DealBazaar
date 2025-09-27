@@ -16,9 +16,10 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
-    const { login, isAuthenticated, user } = useAuth(); // Access isAuthenticated and user
+    const { login, isAuthenticated, user, logout } = useAuth();
+    
+    // Form state
     const [loginData, setLoginData] = useState({
-
         mobileNumber: '',
         otp: '',
         name: '',
@@ -31,9 +32,12 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         district: '',
         state: '',
     });
-    const [currentFormStep, setCurrentFormStep] = useState(1); // 1: Phone, 2: OTP, 3: Profile, 4: Address
+
+    // UI state
+    const [currentFormStep, setCurrentFormStep] = useState(1);
     const [loginError, setLoginError] = useState('');
     const [loginLoading, setLoginLoading] = useState(false);
+    const [userStatus, setUserStatus] = useState<UserState | null>(null);
 
     useEffect(() => {
         if (open) { // Only run when the modal is open
@@ -92,15 +96,17 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         if (loginData.mobileNumber.length === 10) {
             setLoginLoading(true);
             try {
-                // Assuming apiService.sendOtp returns userState in its response
-                const res: { status: number; message: string; data?: [{ status: UserState }] } = await apiService.sendOtp(loginData.mobileNumber);
-                if (res.status === 200) {
-                    setCurrentFormStep(2); // Always go to OTP step to verify and get token
+                const response = await apiService.sendOtp(loginData.mobileNumber);
+                if (response.status === 200) {
+                    if (response.data?.[0]) {
+                        setUserStatus(response.data[0].status);
+                    }
+                    setCurrentFormStep(2); // Move to OTP verification
                 } else {
-                    setLoginError(res.message || 'Failed to send OTP');
+                    setLoginError(response.message || 'Failed to send OTP');
                 }
             } catch (err) {
-                setLoginError('Failed to send OTP');
+                setLoginError('Failed to send OTP. Please try again.');
             } finally {
                 setLoginLoading(false);
             }
@@ -112,27 +118,35 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         if (loginData.otp.length === 6) {
             setLoginLoading(true);
             try {
-                // Assuming apiService.verifyOtp returns userState in res.data[0]
-                const res: { status: number; message: string; data?: [{ token: string; status?: UserState }] } = await apiService.verifyOtp(loginData.mobileNumber, loginData.otp);
-                if (res.status === 200 && res.data && res.data[0]?.token) {
-                    await login(res.data[0].token);
-                    console.log('Token received in login-modal:', res.data[0].token);
-                    const userState = res.data[0].status; // Get status from data[0]
-                    if (userState === "COMPLETED") {
-                        onSuccess && onSuccess();
-                        handleClose();
-                    } else if (userState === "VERIFIED") {
-                        setCurrentFormStep(3); // Go to Profile Details
-                    } else if (userState === "STEP1") {
-                        setCurrentFormStep(4); // Go to Address Details
-                    } else { // INITIATED or new user
-                        setCurrentFormStep(3); // Go to Profile Details
+                const response = await apiService.verifyOtp(loginData.mobileNumber, loginData.otp);
+                if (response.status === 200 && response.data?.[0]?.accessToken) {
+                    const { accessToken, status } = response.data[0];
+                    
+                    // Store the token and update auth state
+                    await login(accessToken);
+                    setUserStatus(status);
+
+                    // Route based on user status
+                    switch (status) {
+                        case "COMPLETED":
+                            onSuccess?.();
+                            handleClose();
+                            break;
+                        case "STEP1":
+                            setCurrentFormStep(4); // Address form
+                            break;
+                        case "VERIFIED":
+                        case "INITIATED":
+                            setCurrentFormStep(3); // Profile form
+                            break;
+                        default:
+                            setCurrentFormStep(3); // Default to profile
                     }
                 } else {
-                    setLoginError(res.message || 'Invalid OTP');
+                    setLoginError(response.message || 'Invalid OTP');
                 }
             } catch (err) {
-                setLoginError('Invalid OTP');
+                setLoginError('Failed to verify OTP. Please try again.');
             } finally {
                 setLoginLoading(false);
             }
@@ -143,18 +157,27 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         setLoginError('');
         setLoginLoading(true);
         try {
-            const res = await apiService.updateProfile({
+            const response = await apiService.updateProfile({
                 name: loginData.name,
                 dob: loginData.dob,
                 gender: loginData.gender,
             });
-            if (res.status === 200) {
-                setCurrentFormStep(4); // Go to Address Details
+            
+            if (response.status === 200) {
+                if (response.data?.[0]) {
+                    setUserStatus(response.data[0].status);
+                }
+                setCurrentFormStep(4); // Proceed to address details
             } else {
-                setLoginError(res.message || 'Failed to update profile');
+                setLoginError(response.message || 'Failed to update profile');
             }
         } catch (err) {
-            setLoginError('Failed to update profile');
+            setLoginError('Failed to update profile. Please try again.');
+            // If token expired, logout and restart flow
+            if ((err as any)?.status === 401) {
+                logout();
+                handleClose();
+            }
         } finally {
             setLoginLoading(false);
         }
@@ -164,7 +187,7 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         setLoginError('');
         setLoginLoading(true);
         try {
-            const res = await apiService.updateAddress({
+            const response = await apiService.updateAddress({
                 baseAddress: loginData.baseAddress,
                 postOfficeName: loginData.postOfficeName,
                 pincode: loginData.pincode,
@@ -172,14 +195,22 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
                 district: loginData.district,
                 state: loginData.state,
             });
-            if (res.status === 200) {
-                onSuccess && onSuccess();
-                handleClose();
+            
+            if (response.status === 200) {
+                if (response.data?.[0]?.status === "COMPLETED") {
+                    onSuccess?.();
+                    handleClose();
+                }
             } else {
-                setLoginError(res.message || 'Failed to update address');
+                setLoginError(response.message || 'Failed to update address');
             }
         } catch (err) {
-            setLoginError('Failed to update address');
+            setLoginError('Failed to update address. Please try again.');
+            // If token expired, logout and restart flow
+            if ((err as any)?.status === 401) {
+                logout();
+                handleClose();
+            }
         } finally {
             setLoginLoading(false);
         }

@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Phone, MessageCircle, Zap, Star, Shield, ChevronDown, User, LogOut, Settings, Search, MapPin, CheckCircle, Home as HomeIcon } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle, Zap, Star, Shield, ChevronDown, User, LogOut, Settings, Search, MapPin, CheckCircle, Home as HomeIcon, ShoppingCart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SearchBar } from './search-bar';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/components/providers/auth-provider';
 import { apiService } from '@/lib/api';
@@ -103,18 +103,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
                   <CheckCircle className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-teal-600 font-bold text-lg">ELECTRONICPICKUP</span>
+                <span className="text-teal-600 font-bold text-lg">DealBazaar</span>
               </Link>
               {/* Search Bar */}
               <div className="flex-1 max-w-xl mx-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search for electronics, furniture & more"
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                </div>
+                <SearchBar placeholder="Search for electronics, furniture & more" />
               </div>
               {/* Right Side - Location & Login */}
               <div className="flex items-center space-x-4">
@@ -257,7 +250,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                   Call
                 </Button>
                 <Link href="/pickup-request" className="block">
-                  <Button className="bg-black hover:bg-gray-800 text-white px-4 py-2 ml-2">
+                  <Button className="ml-2">
                     Schedule Pickup
                   </Button>
                 </Link>
@@ -274,13 +267,13 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
         className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 lg:hidden"
       >
         <div className="px-4 py-3">
-          <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-1.5">
                 <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
                     <CheckCircle className="w-3 h-3 text-white" />
                 </div>
-                <span className="text-teal-600 font-bold text-sm">ELECTRONICPICKUP</span>
+                <span className="text-teal-600 font-bold text-sm">DealBazaar</span>
             </Link>
 
             <div className="flex items-center space-x-2">
@@ -358,7 +351,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                     className="w-full block"
                   >
                     <Button
-                      className="w-full bg-black hover:bg-gray-800 text-white flex items-center gap-2 justify-center py-2 text-sm"
+                      className="w-full flex items-center gap-2 justify-center py-2 text-sm"
                     >
                       Schedule Pickup
                     </Button>
@@ -390,8 +383,8 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
               pathname.startsWith('/products') ? 'text-teal-500' : 'text-gray-600'
             )}
           >
-            <Zap className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Buy</span>
+            <ShoppingCart className="w-6 h-6 mb-1" />
+            <span className="text-xs font-medium">Products</span>
           </Link>
           <Link
             href="/pickup-request"
@@ -400,18 +393,18 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
               pathname === '/pickup-request' ? 'text-teal-500' : 'text-gray-600'
             )}
           >
-            <Star className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Sell</span>
+            <ShoppingBag className="w-6 h-6 mb-1" />
+            <span className="text-xs font-medium">Sell Now</span>
           </Link>
           <Link
-            href="/rate-list"
+            href="/contact"
             className={cn(
               'flex flex-col items-center py-2 px-3 transition-colors',
-              pathname === '/rate-list' ? 'text-teal-500' : 'text-gray-600'
+              pathname === '/contact' ? 'text-teal-500' : 'text-gray-600'
             )}
           >
-            <Shield className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Repair</span>
+            <Phone className="w-6 h-6 mb-1" />
+            <span className="text-xs font-medium">Contact Us</span>
           </Link>
           <button
             onClick={handleLogin}

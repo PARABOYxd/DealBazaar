@@ -7,13 +7,15 @@ class ApiService {
   private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T) {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {};
-
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-        ...(options?.headers || {})
-      };
+      const headers = new Headers(options?.headers);
+      
+      // Set default headers if not already present
+      if (!headers.has('Content-Type')) {
+        headers.set('Content-Type', 'application/json');
+      }
+      if (token && !headers.has('Authorization')) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,

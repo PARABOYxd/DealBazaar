@@ -114,10 +114,10 @@ export interface User {
   name: string;
   email: string;
   phoneNumber: string;
+  status: UserState;
   avatar?: string;
   createdAt: string;
   lastLoginAt: string;
-  status?: UserState; // Added status field
 }
 
 export interface LoginResponse {

@@ -16,33 +16,33 @@ import { ErrorBoundary } from '@/components/common/error-boundary';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ElectroFurni Pickup - Best Prices for Electronics & Furniture | Mumbai',
-  description: 'Get the best prices for your old electronics and furniture. Free doorstep pickup service in Mumbai. Instant quotes, hassle-free process. Contact us today!',
-  keywords: 'electronics pickup, furniture pickup, sell old electronics, sell furniture, Mumbai, best prices, doorstep pickup, instant quotes',
-  authors: [{ name: 'ElectroFurni Pickup' }],
+  title: 'Bhej Do - Schedule Free Pickup for Electronics & Furniture',
+  description: 'Bhej Do - schedule free doorstep pickup for your electronics and furniture. Get instant quotes and hassle-free collection.',
+  keywords: 'bhej do, pickup, electronics pickup, furniture pickup, schedule pickup',
+  authors: [{ name: 'Bhej Do' }],
   viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
   openGraph: {
     type: 'website',
     locale: 'en_IN',
     url: process.env.NEXT_PUBLIC_BASE_URL,
-    siteName: 'ElectroFurni Pickup',
-    title: 'ElectroFurni Pickup - Best Prices for Electronics & Furniture',
-    description: 'Get the best prices for your old electronics and furniture with free doorstep pickup service in Mumbai.',
+    siteName: 'Bhej Do',
+    title: 'Bhej Do - Free Pickup for Electronics & Furniture',
+    description: 'Schedule free doorstep pickup for electronics and furniture with Bhej Do.',
     images: [
       {
-        url: 'https://placehold.co/1200x630/png?text=ElectroFurni+Pickup',
+        url: 'https://placehold.co/1200x630/png?text=Bhej+Do',
         width: 1200,
         height: 630,
-        alt: 'ElectroFurni Pickup - Electronics and Furniture Pickup Service',
+        alt: 'Bhej Do - Free Pickup Service',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ElectroFurni Pickup - Best Prices for Electronics & Furniture',
-    description: 'Get the best prices for your old electronics and furniture with free doorstep pickup service in Mumbai.',
-    images: ['https://placehold.co/1200x630/png?text=ElectroFurni+Pickup'],
+  title: 'Bhej Do - Free Pickup for Electronics & Furniture',
+  description: 'Schedule free doorstep pickup for electronics and furniture with Bhej Do.',
+  images: ['https://placehold.co/1200x630/png?text=Bhej+Do'],
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || 'your-google-verification-code',

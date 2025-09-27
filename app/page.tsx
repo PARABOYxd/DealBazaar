@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Star,
@@ -30,15 +30,15 @@ import {
   Menu,
   ChevronDown,
   ArrowLeft,
-  ArrowRight as ArrowRightIcon
-} from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/lib/api';
-import { generateSEO } from '@/lib/seo';
+  ArrowRight as ArrowRightIcon,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { apiService } from "@/lib/api";
+import { generateSEO } from "@/lib/seo";
 import {
   Carousel,
   CarouselContent,
@@ -49,12 +49,52 @@ import {
 } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Autoplay from "embla-carousel-autoplay";
-import { useInView } from 'react-intersection-observer';
-import { getHomePageData, type HomePageData } from '@/lib/api';
-import LazyProductSection from '@/components/common/lazy-product-section';
+import { getHomePageData, type HomePageData } from "@/lib/api";
+import LazyProductSection from "@/components/common/lazy-product-section";
+import dynamic from "next/dynamic";
+import { useInView } from "react-intersection-observer";
+
+// Dynamically import the FAQ section for faster initial load
+const FaqSection = dynamic(() => import("@/components/common/faq-section"), {
+  ssr: false,
+  loading: () => (
+    <div className="py-16 bg-white text-center">Loading FAQs...</div>
+  ),
+});
+
+function LazyFaqWrapper() {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  return (
+    <div ref={ref}>
+      {inView ? (
+        // when visible, load the FAQ section; allow the section to be a link for click-to-open
+        // @ts-ignore - dynamic import may not have exact prop types
+        <FaqSection linkOnClick={true} />
+      ) : (
+        // lightweight CTA placeholder
+        <section className="py-12 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Have questions?</h2>
+            <p className="text-gray-600 mb-6">
+              Browse our full FAQ for answers to common questions.
+            </p>
+            <Link
+              href="/faq"
+              className="inline-block bg-teal-500 text-white px-6 py-3 rounded-md hover:bg-teal-600"
+            >
+              View All FAQs
+            </Link>
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
 
 export default function Home() {
-  const heroAutoplay = React.useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
+  const heroAutoplay = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: true })
+  );
   const [heroApi, setHeroApi] = React.useState<CarouselApi>();
   const { ref: heroCarouselRef, inView: heroCarouselInView } = useInView({
     triggerOnce: true,
@@ -70,12 +110,15 @@ export default function Home() {
     }
   }, [heroApi, heroCarouselInView]);
 
-  const testimonialAutoplay = React.useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+  const testimonialAutoplay = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
   const [testimonialApi, setTestimonialApi] = React.useState<CarouselApi>();
-  const { ref: testimonialCarouselRef, inView: testimonialCarouselInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const { ref: testimonialCarouselRef, inView: testimonialCarouselInView } =
+    useInView({
+      triggerOnce: true,
+      threshold: 0.1,
+    });
 
   React.useEffect(() => {
     if (!testimonialApi) return;
@@ -87,75 +130,74 @@ export default function Home() {
   }, [testimonialApi, testimonialCarouselInView]);
 
   const { data: homeData = {} as HomePageData } = useQuery<HomePageData>({
-    queryKey: ['homePageData'],
+    queryKey: ["homePageData"],
     queryFn: () => getHomePageData(),
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
   const testimonials = homeData.testimonials || [];
 
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919876543210';
-  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '+919876543210';
+  const whatsappNumber =
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
+  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || "+919876543210";
 
   const openWhatsApp = () => {
-    const message = encodeURIComponent('Hello! I want to sell my electronics/furniture items. Can you help me get the best price?');
-    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+    const message = encodeURIComponent(
+      "Hello! I want to sell my electronics/furniture items. Can you help me get the best price?"
+    );
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
   };
 
   const makeCall = () => {
-    window.open(`tel:${phoneNumber}`, '_self');
+    window.open(`tel:${phoneNumber}`, "_self");
   };
 
   const getInitials = (name: string | null | undefined) => {
     if (!name) {
-      return '';
+      return "";
     }
-    const names = name.split(' ');
-    const firstName = names[0] ?? '';
-    const lastName = names.length > 1 ? names[names.length - 1] : '';
+    const names = name.split(" ");
+    const firstName = names[0] ?? "";
+    const lastName = names.length > 1 ? names[names.length - 1] : "";
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
 
   const services = [
-    { name: 'Sell Phone', icon: Smartphone, color: 'bg-teal-100' },
-    { name: 'Sell Laptop', icon: Laptop, color: 'bg-teal-100' },
-    { name: 'Sell Gadgets', icon: Camera, color: 'bg-teal-100' },
-    { name: 'Sell Furniture', icon: Sofa, color: 'bg-teal-100' },
-    { name: 'Sell Appliances', icon: HomeIcon, color: 'bg-teal-100' },
-    { name: 'Sell Audio', icon: Headphones, color: 'bg-teal-100' },
-    { name: 'Sell Monitors', icon: Monitor, color: 'bg-teal-100' },
-    { name: 'Sell Gaming', icon: Gamepad2, color: 'bg-teal-100' },
-
-
-
+    { name: "Sell Phone", icon: Smartphone, color: "bg-teal-100" },
+    { name: "Sell Laptop", icon: Laptop, color: "bg-teal-100" },
+    { name: "Sell Gadgets", icon: Camera, color: "bg-teal-100" },
+    { name: "Sell Furniture", icon: Sofa, color: "bg-teal-100" },
+    { name: "Sell Appliances", icon: HomeIcon, color: "bg-teal-100" },
+    { name: "Sell Audio", icon: Headphones, color: "bg-teal-100" },
+    { name: "Sell Monitors", icon: Monitor, color: "bg-teal-100" },
+    { name: "Sell Gaming", icon: Gamepad2, color: "bg-teal-100" },
   ];
 
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
-      title: 'Instant Quotes',
-      description: 'Get price quotes within minutes',
+      title: "Instant Quotes",
+      description: "Get price quotes within minutes",
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: 'Best Prices',
-      description: 'Highest market value guaranteed',
+      title: "Best Prices",
+      description: "Highest market value guaranteed",
     },
     {
       icon: <Truck className="w-6 h-6" />,
-      title: 'Free Pickup',
-      description: 'Doorstep service across Mumbai',
+      title: "Free Pickup",
+      description: "Doorstep service across Mumbai",
     },
     {
       icon: <Clock className="w-6 h-6" />,
-      title: '24/7 Support',
-      description: 'Always here to help you',
+      title: "24/7 Support",
+      description: "Always here to help you",
     },
   ];
 
   return (
     <>
-
       {/* Mobile Search Bar (moved from Navbar) */}
       <div className="lg:hidden px-4 py-2">
         <div className="relative">
@@ -183,7 +225,7 @@ export default function Home() {
             <CarouselContent>
               {/* Banner 1 - Sell Phone */}
               <CarouselItem className="basis-full">
-                <div className="bg-teal-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
+                <div className="bg-primary-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
                   <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
@@ -195,18 +237,24 @@ export default function Home() {
                       >
                         <div className="space-y-1 sm:space-y-2 lg:space-y-6">
                           <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
-                            Sell Old <span className="text-white">Phone</span>
+                            Sell Old{" "}
+                            <span style={{ color: "#13AF9E" }}>Phone</span>
                           </h1>
 
-                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-teal-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                            From Your Doorstep or At Any of our 200 Stores Pan India
+                          <p
+                            className="text-[10px] sm:text-sm md:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                            style={{ color: "#13AF9E" }}
+                          >
+                            From Your Doorstep or At Any of our 200 Stores Pan
+                            India
                           </p>
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
                           <Button
                             size="sm"
-                            className="bg-black hover:bg-gray-800 text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
+                            style={{ backgroundColor: "#13AF9E" }}
+                            className="text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
                             onClick={openWhatsApp}
                           >
                             Sell Now
@@ -226,13 +274,25 @@ export default function Home() {
                           <div className="absolute inset-0 bg-black rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
                             <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
                               {/* Doorstep Pickup Badge */}
-                              <div className="bg-teal-500 text-white px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2">
+                              <div
+                                className="px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2"
+                                style={{
+                                  backgroundColor: "#13AF9E",
+                                  color: "#fff",
+                                }}
+                              >
                                 <Truck className="w-2 h-2 md:w-4 md:h-4" />
                                 DOORSTEP PICKUP
                               </div>
 
                               {/* 200 Stores Badge */}
-                              <div className="bg-teal-500 text-white px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2">
+                              <div
+                                className="px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2"
+                                style={{
+                                  backgroundColor: "#13AF9E",
+                                  color: "#fff",
+                                }}
+                              >
                                 <MapPin className="w-2 h-2 md:w-4 md:h-4" />
                                 200 STORES PAN INDIA
                               </div>
@@ -240,7 +300,10 @@ export default function Home() {
                           </div>
 
                           {/* Delivery Person Illustration */}
-                          <div className="absolute -bottom-2 -right-1 sm:-bottom-4 sm:-right-2 md:-bottom-8 md:-right-4 w-8 h-8 sm:w-12 sm:h-12 md:w-20 md:h-20 bg-teal-600 rounded-full flex items-center justify-center">
+                          <div
+                            className="absolute -bottom-2 -right-1 sm:-bottom-4 sm:-right-2 md:-bottom-8 md:-right-4 w-8 h-8 sm:w-12 sm:h-12 md:w-20 md:h-20 rounded-full flex items-center justify-center"
+                            style={{ backgroundColor: "#13AF9E" }}
+                          >
                             <Truck className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
                           </div>
                         </div>
@@ -268,7 +331,8 @@ export default function Home() {
                           </h1>
 
                           <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-blue-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                            Get Best Prices for Your Old Laptop. Instant Quotes & Free Pickup
+                            Get Best Prices for Your Old Laptop. Instant Quotes
+                            & Free Pickup
                           </p>
                         </div>
 
@@ -296,8 +360,12 @@ export default function Home() {
                             <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
                               <Laptop className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-blue-600" />
                               <div className="text-center">
-                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">Best Price</div>
-                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">Guaranteed</div>
+                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">
+                                  Best Price
+                                </div>
+                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">
+                                  Guaranteed
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -310,7 +378,7 @@ export default function Home() {
 
               {/* Banner 3 - Sell Furniture */}
               <CarouselItem className="basis-full">
-                <div className="bg-gradient-to-r from-green-600 to-green-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
+                <div className="bg-gradient-to-r from-primary-600 to-primary-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
                   <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
                     <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
                       {/* Left Content */}
@@ -322,11 +390,13 @@ export default function Home() {
                       >
                         <div className="space-y-1 sm:space-y-2 lg:space-y-6">
                           <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
-                            Sell Old <span className="text-white">Furniture</span>
+                            Sell Old{" "}
+                            <span className="text-white">Furniture</span>
                           </h1>
 
-                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-green-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                            Transform Your Space. Sell Old Furniture & Get Cash Instantly
+                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-primary-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            Transform Your Space. Sell Old Furniture & Get Cash
+                            Instantly
                           </p>
                         </div>
 
@@ -352,10 +422,14 @@ export default function Home() {
                           {/* Furniture Outline */}
                           <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
                             <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
-                              <Sofa className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-green-600" />
+                              <Sofa className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-primary-600" />
                               <div className="text-center">
-                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">Free Pickup</div>
-                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">Doorstep Service</div>
+                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">
+                                  Free Pickup
+                                </div>
+                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">
+                                  Doorstep Service
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -386,7 +460,9 @@ export default function Home() {
         <div className="mx-auto px-4">
           <div className="text-center mb-6">
             <div className="text-left mb-6">
-              <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">Our Services</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">
+                Our Services
+              </h2>
             </div>
           </div>
 
@@ -402,9 +478,13 @@ export default function Home() {
               >
                 <Card className="bg-white border border-gray-200 hover:border-teal-400 hover:shadow-lg transition-all duration-300 p-4 text-center group-hover:scale-105 rounded-xl">
                   <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3 text-teal-600 group-hover:scale-110 transition-transform duration-300">
-                    {React.createElement(service.icon, { className: "w-6 h-6" })}
+                    {React.createElement(service.icon, {
+                      className: "w-6 h-6",
+                    })}
                   </div>
-                  <h3 className="font-semibold text-black text-xs">{service.name}</h3>
+                  <h3 className="font-semibold text-black text-xs">
+                    {service.name}
+                  </h3>
                 </Card>
               </motion.div>
             ))}
@@ -412,19 +492,33 @@ export default function Home() {
         </div>
       </section>
 
-
-
       {/* Product Sections */}
-      <LazyProductSection title="Electronics" category="electronics" whatsappNumber={whatsappNumber} />
-      <LazyProductSection title="Home Appliances" category="home-appliances" whatsappNumber={whatsappNumber} />
-      <LazyProductSection title="Furniture" category="furniture" whatsappNumber={whatsappNumber} />
+      <LazyProductSection
+        title="Electronics"
+        category="electronics"
+        whatsappNumber={whatsappNumber}
+      />
+      <LazyProductSection
+        title="Home Appliances"
+        category="home-appliances"
+        whatsappNumber={whatsappNumber}
+      />
+      <LazyProductSection
+        title="Furniture"
+        category="furniture"
+        whatsappNumber={whatsappNumber}
+      />
 
       {/* Why Choose Us Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">Why Choose Us</h2>
-            <p className="text-gray-600 text-lg">We make selling your items simple and profitable</p>
+            <h2 className="text-3xl font-bold text-black mb-4">
+              Why Choose Us
+            </h2>
+            <p className="text-gray-600 text-lg">
+              We make selling your items simple and profitable
+            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -438,11 +532,11 @@ export default function Home() {
                 className="text-center"
               >
                 <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="text-teal-600">
-                    {feature.icon}
-                  </div>
+                  <div className="text-teal-600">{feature.icon}</div>
                 </div>
-                <h3 className="text-xl font-semibold text-black mb-2">{feature.title}</h3>
+                <h3 className="text-xl font-semibold text-black mb-2">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
@@ -455,33 +549,37 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-black mb-4">How It Works</h2>
-            <p className="text-gray-600 text-lg">Simple 4-step process to sell your items</p>
+            <p className="text-gray-600 text-lg">
+              Simple 4-step process to sell your items
+            </p>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
             {[
               {
-                step: '1',
-                title: 'Submit Request',
-                description: 'Contact us via WhatsApp with item details and photos',
+                step: "1",
+                title: "Submit Request",
+                description:
+                  "Contact us via WhatsApp with item details and photos",
                 icon: <MessageCircle className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
               {
-                step: '2',
-                title: 'Get Quote',
-                description: 'Receive instant price quote based on market value',
+                step: "2",
+                title: "Get Quote",
+                description:
+                  "Receive instant price quote based on market value",
                 icon: <DollarSign className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
               {
-                step: '3',
-                title: 'Schedule Pickup',
-                description: 'Choose convenient time for free doorstep pickup',
+                step: "3",
+                title: "Schedule Pickup",
+                description: "Choose convenient time for free doorstep pickup",
                 icon: <Truck className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
               {
-                step: '4',
-                title: 'Get Paid',
-                description: 'Receive payment instantly after verification',
+                step: "4",
+                title: "Get Paid",
+                description: "Receive payment instantly after verification",
                 icon: <CheckCircle className="w-6 h-6 lg:w-8 lg:h-8" />,
               },
             ].map((item, index) => (
@@ -500,7 +598,9 @@ export default function Home() {
                   <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-sm">
                     {item.step}
                   </div>
-                  <h3 className="text-lg lg:text-xl font-bold text-black mb-3">{item.title}</h3>
+                  <h3 className="text-lg lg:text-xl font-bold text-black mb-3">
+                    {item.title}
+                  </h3>
                   <p className="text-sm text-gray-600">{item.description}</p>
                 </Card>
               </motion.div>
@@ -512,22 +612,30 @@ export default function Home() {
       {/* Trust Section */}
       <section className="py-16 bg-black text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Trust Statement */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Trusted by 157.52 Lac + Happy Users and Major Brands since 2015
-            </h2>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-gray-800 rounded-lg p-8 text-center">
-              <div className="text-4xl font-bold text-white mb-2">11813.85Cr.</div>
-              <div className="text-gray-400">Cash Given</div>
+          {/* Trust and Stats Section */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-12">
+            {/* Trust Statement */}
+            <div className="text-center lg:text-left lg:w-1/2">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Trusted by <span className="text-teal-400">157.52 Lac +</span>{" "}
+                Happy Users and Major Brands since 2015
+              </h2>
             </div>
-            <div className="bg-gray-800 rounded-lg p-8 text-center">
-              <div className="text-4xl font-bold text-white mb-2">175.02Lac</div>
-              <div className="text-gray-400">Gadgets Encashed</div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 gap-4 lg:gap-8 lg:w-1/2">
+              <div className="bg-gray-800 rounded-lg p-4 sm:p-6 lg:p-8 text-center">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+                  11813.85Cr.
+                </div>
+                <div className="text-sm text-gray-400">Cash Given</div>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 sm:p-6 lg:p-8 text-center">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+                  175.02Lac
+                </div>
+                <div className="text-sm text-gray-400">Gadgets Encashed</div>
+              </div>
             </div>
           </div>
 
@@ -535,7 +643,9 @@ export default function Home() {
           {testimonials.length > 0 && (
             <div className="relative" ref={testimonialCarouselRef}>
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-white mb-4">What Our Customers Say</h3>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  What Our Customers Say
+                </h3>
               </div>
 
               <Carousel
@@ -548,40 +658,66 @@ export default function Home() {
                 className="w-full max-w-6xl mx-auto"
               >
                 <CarouselContent>
-                  {testimonials.map((testimonial: import("@/types").Testimonial, index: number) => (
-                    <CarouselItem key={index} className="basis-4/5 sm:basis-1/2 lg:basis-1/4">
-                      <div className="p-2 h-full">
-                                                                        <Card className="bg-white border border-gray-200 shadow-lg h-full flex flex-col">
-                          <CardContent className="p-4 flex flex-col justify-between h-full">
-                            <div>
-                              <div className="text-3xl text-blue-600 mb-2">"</div>
-                              <p className="text-gray-800 mb-4 text-sm min-h-[48px] line-clamp-3">
-                                {testimonial.comment}
-                              </p>
-                            </div>
-                            <div className="flex items-center space-x-3 mt-auto">
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src={testimonial.image} alt={testimonial.name} />
-                                <AvatarFallback className="bg-teal-200 text-teal-800 font-semibold">
-                                  {getInitials(testimonial.name)}
-                                </AvatarFallback>
-                              </Avatar>
+                  {testimonials.map(
+                    (
+                      testimonial: import("@/types").Testimonial,
+                      index: number
+                    ) => (
+                      <CarouselItem
+                        key={index}
+                        className="basis-4/5 sm:basis-1/2 lg:basis-1/4"
+                      >
+                        <div className="p-2 h-full">
+                          <Card className="bg-white border border-gray-200 shadow-lg h-full flex flex-col">
+                            <CardContent className="p-4 flex flex-col justify-between h-full">
                               <div>
-                                <div className="font-bold text-black text-xs">{testimonial.name}</div>
-                                <div className="text-xs text-gray-800">{testimonial.location}</div>
+                                <div className="text-3xl text-blue-600 mb-2">
+                                  "
+                                </div>
+                                <p className="text-gray-800 mb-4 text-sm min-h-[48px] line-clamp-3">
+                                  {testimonial.comment}
+                                </p>
                               </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
+                              <div className="flex items-center space-x-3 mt-auto">
+                                <Avatar className="w-8 h-8">
+                                  <AvatarImage
+                                    src={testimonial.image}
+                                    alt={testimonial.name}
+                                  />
+                                  <AvatarFallback className="bg-teal-200 text-teal-800 font-semibold">
+                                    {getInitials(testimonial.name)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="font-bold text-black text-xs">
+                                    {testimonial.name}
+                                  </div>
+                                  <div className="text-xs text-gray-800">
+                                    {testimonial.location}
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CarouselItem>
+                    )
+                  )}
                 </CarouselContent>
               </Carousel>
             </div>
           )}
         </div>
       </section>
+
+      {/* Lazy-load FAQ: when in view, render the full component; otherwise show a small CTA box that links to /faq */}
+      <React.Suspense
+        fallback={
+          <div className="py-16 bg-white text-center">Loading FAQs...</div>
+        }
+      >
+        <LazyFaqWrapper />
+      </React.Suspense>
 
       {/* CTA Section */}
       <section className="py-16 bg-black text-white relative">
@@ -597,8 +733,8 @@ export default function Home() {
                 Ready to Sell Your <span className="text-teal-400">Items</span>?
               </h2>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Get instant quotes and schedule free pickup today.
-                Join thousands of satisfied customers across Mumbai.
+                Get instant quotes and schedule free pickup today. Join
+                thousands of satisfied customers across Mumbai.
               </p>
             </div>
 
@@ -644,8 +780,6 @@ export default function Home() {
         {/* Teal Accent Bar */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-500"></div>
       </section>
-
-
     </>
   );
 }

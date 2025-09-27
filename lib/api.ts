@@ -203,9 +203,17 @@ class ApiService {
   }
 
   // FAQ
-  async getFAQs(category?: string): Promise<ApiResponse<FAQ[]>> {
-    const params = category ? `?category=${category}` : '';
-    return this.fetchApi(`/faqs${params}`, undefined, []);
+  async getFAQs(params?: { category?: string; size?: number; page?: number }): Promise<ApiResponse<FAQ[]>> {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      if (params.category) searchParams.append('category', params.category);
+      if (params.size !== undefined) searchParams.append('size', params.size.toString());
+      if (params.page !== undefined) searchParams.append('page', params.page.toString());
+    }
+
+    const query = searchParams.toString() ? `?${searchParams.toString()}` : '';
+    return this.fetchApi(`/faqs${query}`, undefined, []);
   }
 
   // Blog

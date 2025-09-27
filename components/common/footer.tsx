@@ -56,16 +56,9 @@ export function Footer({ contactInfo }: FooterProps) {
             className="space-y-6 text-center md:text-left w-full"
           >
             <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-teal-600 rounded-full flex items-center justify-center">
-                  <Star className="w-2.5 h-2.5 text-white fill-white" />
-                </div>
-              </div>
+              <img src="/logo-compact.svg" alt="Bhej Do logo" className="w-12 h-12 rounded-full shadow-sm object-contain" />
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-teal-400">ELECTRONICPICKUP</span>
+                <span className="text-xl font-bold text-teal-400">Bhej Do</span>
                 <span className="text-xs text-muted-foreground">Best Prices Guaranteed</span>
               </div>
             </div>
@@ -120,6 +113,7 @@ export function Footer({ contactInfo }: FooterProps) {
                 { name: 'Rate List', href: '/rate-list' },
                 { name: 'About Us', href: '/about' },
                 { name: 'Contact', href: '/contact' },
+                { name: 'FAQ', href: '/faq' },
               ].map((link) => (
                 <li key={link.name}>
                   <Link
@@ -233,7 +227,7 @@ export function Footer({ contactInfo }: FooterProps) {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-center md:text-left">
             <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 w-full md:w-auto">
               <p className="text-gray-400 text-sm">
-                © {currentYear} ELECTRONICPICKUP. All rights reserved.
+                © {currentYear} Bhej Do. All rights reserved.
               </p>
               <div className="flex items-center space-x-4 text-xs text-gray-400">
                 <span>Made with ❤️ in Mumbai</span>

@@ -333,18 +333,18 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
               {images.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                   {images.map((image, index) => (
-                    <div key={index} className="relative">
-                      <Image
+                    <div key={index} className="relative overflow-hidden rounded bg-gray-50">
+                      {/* Use a plain img with explicit height so previews render correctly (Next Image fill requires a sized parent) */}
+                      <img
                         src={URL.createObjectURL(image)}
                         alt={`Upload ${index + 1}`}
-                        fill
-                        className="object-cover rounded"
+                        className="object-cover w-full h-32 md:h-24"
                       />
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        className="absolute -top-2 -right-2 w-6 h-6 p-0"
+                        className="absolute top-1 right-1 w-6 h-6 p-0"
                         onClick={() => removeImage(index)}
                       >
                         <X className="w-3 h-3" />

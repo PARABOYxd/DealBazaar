@@ -55,7 +55,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
         {/* Product Image */}
         <div className="relative aspect-square overflow-hidden bg-gray-100">
           <Image
-            src={(product.images && product.images[0]) || '/images/placeholder-product.jpg'}
+            src={product.images && product.images[0] ? `/images/${product.images[0]}` : '/images/placeholder-product.jpg'}
             alt={product.name}
             fill
             className={cn(

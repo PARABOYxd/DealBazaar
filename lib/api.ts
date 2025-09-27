@@ -9,13 +9,15 @@ class ApiService {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {};
 
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...(options?.headers || {})
+      };
+
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader,
-          ...options?.headers,
-        },
         ...options,
+        headers
       });
 
       // Handle 401 Unauthorized specifically

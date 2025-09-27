@@ -100,12 +100,14 @@ export interface Pagination {
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
+  status: number;
   data: T;
   message?: string;
   error?: string;
   pagination?: Pagination;
 }
+
+export type UserState = "INITIATED" | "VERIFIED" | "STEP1" | "COMPLETED";
 
 export interface User {
   id: string;
@@ -115,4 +117,12 @@ export interface User {
   avatar?: string;
   createdAt: string;
   lastLoginAt: string;
+  status?: UserState; // Added status field
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  status: string;       // e.g., 'COMPLETED', 'PENDING'
+  expiresIn: number;    // seconds
+  isNew?: boolean;          // optional if backend provides
 }

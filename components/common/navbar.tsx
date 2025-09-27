@@ -34,6 +34,8 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [location, setLocation] = useState('Mumbai');
+  const [isLocating, setIsLocating] = useState(true);
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
 
@@ -43,6 +45,34 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+            const data = await response.json();
+            setLocation(data.city || 'Mumbai');
+          } catch (error) {
+            console.error("Error fetching location:", error);
+            setLocation('Mumbai');
+          } finally {
+            setIsLocating(false);
+          }
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          setLocation('Mumbai');
+          setIsLocating(false);
+        }
+      );
+    } else {
+      setLocation('Mumbai');
+      setIsLocating(false);
+    }
   }, []);
 
   const openWhatsApp = () => {
@@ -90,7 +120,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <MapPin className="w-4 h-4 text-teal-500" />
-                  <span>Mumbai</span>
+                  <span>{isLocating ? 'Locating...' : location}</span>
                   <ChevronDown className="w-4 h-4" />
                 </div>
                 <Button
@@ -246,22 +276,31 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-teal-600 font-bold text-lg">ELECTRONICPICKUP</span>
+            <Link href="/" className="flex items-center space-x-1.5">
+                <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                </div>
+                <span className="text-teal-600 font-bold text-sm">ELECTRONICPICKUP</span>
             </Link>
 
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-2"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+            <div className="flex items-center space-x-2">
+                {/* Location */}
+                <div className="flex items-center space-x-1 text-xs text-gray-500">
+                    <MapPin className="w-3 h-3 text-teal-500" />
+                    <span>{isLocating ? 'Locating...' : location}</span>
+                    <ChevronDown className="w-3 h-3" />
+                </div>
+
+                {/* Mobile Menu Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="p-2"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </Button>
+            </div>
           </div>
         </div>
 

@@ -109,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log('Calling apiService.getMe with token:', token); // Added log
       const userResponse = await apiService.getMe(token);
       console.log('Response from apiService.getMe:', userResponse); // Added log
-      if (userResponse.success && userResponse.data) {
+      if (userResponse.status === 200 && userResponse.data) {
         console.log('User data received, calling loginWithUserData.'); // Added log
         loginWithUserData(userResponse.data, token);
       } else {

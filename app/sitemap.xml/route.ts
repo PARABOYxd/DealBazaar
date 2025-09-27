@@ -21,12 +21,12 @@ export async function GET() {
 
   try {
     const productsResponse = await apiService.getProducts({ size: 1000 });
-    if (productsResponse.success) {
+    if (productsResponse.status === 200) {
       products = productsResponse.data;
     }
 
     const blogResponse = await apiService.getBlogPosts({ limit: 1000 });
-    if (blogResponse.success) {
+    if (blogResponse.status === 200) {
       blogPosts = blogResponse.data.posts;
     }
   } catch (error) {

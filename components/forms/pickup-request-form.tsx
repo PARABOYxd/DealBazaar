@@ -123,7 +123,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
       let imageUrls: string[] = [];
       if (images.length > 0) {
         const uploadResponse = await apiService.uploadImages(images);
-        if (uploadResponse.success) {
+        if (uploadResponse.status === 200) {
           imageUrls = uploadResponse.data.urls;
         }
       }
@@ -139,7 +139,7 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
 
       const response = await apiService.createPickupRequest(requestData);
 
-      if (response.success) {
+      if (response.status === 200) {
         setSubmitSuccess(true);
         reset();
         setImages([]);

@@ -6,7 +6,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 class ApiService {
   private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T) {
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
       const headers = new Headers(options?.headers);
       
       // Set default headers if not already present
@@ -89,7 +89,7 @@ class ApiService {
   }
 
   async updateProfile(profileData: { name: string; dob: string; gender: string }): Promise<any> {
-    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    const token = localStorage.getItem('access_token'); // Assuming token is stored in localStorage
     if (!token) {
       throw new Error('No authentication token found.');
     }
@@ -112,7 +112,7 @@ class ApiService {
     district: string;
     state: string;
   }): Promise<any> {
-    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    const token = localStorage.getItem('access_token'); // Assuming token is stored in localStorage
     if (!token) {
       throw new Error('No authentication token found.');
     }

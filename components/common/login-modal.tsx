@@ -116,8 +116,9 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
       try {
         const response = await apiService.verifyOtp(loginData.mobileNumber, loginData.otp);
         if (response.status === 200 && response.data?.[0]?.accessToken) {
-          const { accessToken, status, ...userData } = response.data[0];
-          login(accessToken, userData);
+          const loginResponse = response.data[0]; // Get the full LoginResponse object
+          const { accessToken, status } = loginResponse; // Extract accessToken and status
+          login(accessToken, loginResponse); // Pass the full LoginResponse object
           setUserStatus(status);
 
           switch (status) {
@@ -164,7 +165,7 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         });
         setCurrentFormStep(4);
       } else setLoginError(response.message || 'Failed to update profile');
-    } catch (err) {
+    } catch (err: any) {
       setLoginError('Failed to update profile. Please try again.');
       if ((err as any)?.status === 401) {
         logout();
@@ -189,10 +190,19 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         state: loginData.state,
       });
       if (response.status === 200 && response.data?.[0]?.status === 'COMPLETED') {
+        updateUser({
+          baseAddress: loginData.baseAddress,
+          postOfficeName: loginData.postOfficeName,
+          pincode: loginData.pincode,
+          city: loginData.city,
+          district: loginData.district,
+          state: loginData.state,
+          status: response.data?.[0]?.status,
+        });
         onSuccess?.();
         handleClose();
       } else setLoginError(response.message || 'Failed to update address');
-    } catch {
+    } catch (err: any) {
       setLoginError('Failed to update address. Please try again.');
       if ((err as any)?.status === 401) {
         logout();

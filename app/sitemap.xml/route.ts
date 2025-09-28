@@ -20,12 +20,15 @@ export async function GET() {
   let blogPosts: any[] = [];
 
   try {
-    const productsResponse = await apiService.getProducts({ size: 1000 });
+    const [productsResponse, blogResponse] = await Promise.all([
+      apiService.getProducts({ size: 1000 }),
+      apiService.getBlogPosts({ limit: 1000 }),
+    ]);
+
     if (productsResponse.status === 200) {
       products = productsResponse.data;
     }
 
-    const blogResponse = await apiService.getBlogPosts({ limit: 1000 });
     if (blogResponse.status === 200) {
       blogPosts = blogResponse.data.posts;
     }

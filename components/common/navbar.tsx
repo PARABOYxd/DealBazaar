@@ -128,7 +128,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                       <DropdownMenuItem className="flex flex-col items-start space-y-1">
                         <p className="text-sm font-medium leading-none">{user?.name || "User"}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          {user?.email || user?.phone || ""}
+                          {user?.email || user?.phoneNumber || ""}
                         </p>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
@@ -136,6 +136,12 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
                       </DropdownMenuItem>
+                      {user?.status !== 'COMPLETED' && (
+                        <DropdownMenuItem onClick={handleLogin}>
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          <span>Complete Profile</span>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem>
                         <Settings className="mr-2 h-4 w-4" />
                         <span>Settings</span>
@@ -454,6 +460,12 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48" align="end" forceMount>
+                {user?.status !== 'COMPLETED' && (
+                  <DropdownMenuItem onClick={handleLogin}>
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    <span>Complete Profile</span>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>

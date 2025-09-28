@@ -126,7 +126,7 @@ class ApiService {
     pincode: string;
   }): Promise<any> {
     return this.fetchApi(`/customer/update-profile`, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify(profileData),
     });
   }
@@ -271,6 +271,10 @@ class ApiService {
       body: JSON.stringify({ refreshToken }),
     });
     return res.json();
+  }
+
+  async getAuthStatus(): Promise<ApiResponse<any>> {
+    return this.fetchApi('/auth/status', { method: 'GET' });
   }
 }
 

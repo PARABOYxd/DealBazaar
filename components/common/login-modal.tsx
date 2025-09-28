@@ -20,9 +20,10 @@ interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  isEditMode?: boolean; // New prop to indicate edit mode
 }
 
-export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
+export function LoginModal({ open, onOpenChange, onSuccess, isEditMode = false }: LoginModalProps) {
   const { login, isAuthenticated, user, logout, updateUser } = useAuth();
 
   const [loginData, setLoginData] = useState({
@@ -44,18 +45,23 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
     if (open) {
       if (isAuthenticated && user) {
         setLoginData(prev => ({ ...prev, ...user }));
-        switch (user.status) {
-          case 'COMPLETED':
-            onSuccess?.();
-            handleClose();
-            break;
-          case 'STEP1':
-          case 'VERIFIED':
-          case 'INITIATED':
-            setCurrentFormStep(3);
-            break;
-          default:
-            setCurrentFormStep(1);
+        if (isEditMode) {
+          setCurrentFormStep(3); // Directly go to profile form in edit mode
+        } else {
+          switch (user.status) {
+            case 'COMPLETED':
+              onSuccess?.();
+              handleClose();
+              break;
+            case 'STEP1':
+            case 'VERIFIED':
+            case 'INITIATED':
+            case 'PENDING':
+              setCurrentFormStep(3);
+              break;
+            default:
+              setCurrentFormStep(1);
+          }
         }
       } else {
         setCurrentFormStep(1);
@@ -63,7 +69,7 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
     } else {
       resetForm();
     }
-  }, [open, isAuthenticated, user]);
+  }, [open, isAuthenticated, user, isEditMode]);
 
   const resetForm = () => {
     setLoginData({

@@ -22,13 +22,13 @@ const AUTH_TOKEN_KEY = 'access_token';
 const REDIRECT_PATH_KEY = 'redirect_path';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const USER_DATA_KEY = 'user_data';
-const USER_IS_NEW_STATUS_KEY = 'user_is_new_status'; // New key for storing the isNew flag
+const USER_PROFILE_STATUS_KEY = 'user_profile_status'; // Key for storing the user's profile status
 
 export const clearAuthData = () => {
   console.log('clearAuthData: Clearing authentication data');
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(USER_DATA_KEY);
-  localStorage.removeItem(USER_IS_NEW_STATUS_KEY); // Clear the new key as well
+    localStorage.removeItem(USER_PROFILE_STATUS_KEY); // Clear the profile status key as well
   destroyCookie(null, REFRESH_TOKEN_KEY, { path: '/' });
   console.log('clearAuthData: Authentication data cleared');
 };
@@ -36,7 +36,7 @@ export const clearAuthData = () => {
 const getStoredAuthData = (): { token: string | null; user: User | null; isNewStatus: boolean | null } => {
   const token = localStorage.getItem(AUTH_TOKEN_KEY);
   const userData = localStorage.getItem(USER_DATA_KEY);
-  const isNewStatus = localStorage.getItem(USER_IS_NEW_STATUS_KEY); // Retrieve the new key
+  const isNewStatus = localStorage.getItem(USER_PROFILE_STATUS_KEY); // Retrieve the profile status key
 
   return {
     token,
@@ -58,10 +58,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const storedRefreshToken = cookies[REFRESH_TOKEN_KEY];
 
       if (storedAccessToken && storedUser) {
-        console.log('initializeAuth: Access token and user data found, setting isAuthenticated to true');
-        setIsAuthenticated(true);
-        setUser(storedUser);
-        // You might want to use storedIsNewStatus here if needed for initial state
+        console.log('initializeAuth: Access token and user data found. Verifying token...');
+        try {
+          await apiService.getAuthStatus(); // Attempt to verify token
+          setIsAuthenticated(true);
+          setUser(storedUser);
+          console.log('initializeAuth: Token verified, isAuthenticated set to true.');
+        } catch (error) {
+          console.error('initializeAuth: Token verification failed:', error);
+          clearAuthData();
+          setIsAuthenticated(false);
+        }
       } else if (storedRefreshToken) {
         console.log('initializeAuth: No access token/user data, but refresh token found. Attempting to refresh token.');
         try {
@@ -106,8 +113,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
      console.log('risga' , newUser);
     if (typeof newUser.status !== 'undefined') {
       console.log('risga' , newUser.status);
-      localStorage.setItem(USER_IS_NEW_STATUS_KEY, JSON.stringify(newUser.status));
-      console.log('login: user status stored separately as user_is_new_status');
+      localStorage.setItem(USER_PROFILE_STATUS_KEY, JSON.stringify(newUser.status));
+      console.log('login: user profile status stored separately as user_profile_status');
     }
 
     console.log('login: Access token and user data stored');

@@ -88,7 +88,7 @@ export default function ProfilePage() {
           </Card>
         </div>
       </div>
-      <LoginModal open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen} onSuccess={handleEditSuccess} />
+      <LoginModal open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen} onSuccess={handleEditSuccess} isEditMode={true} />
     </>
   );
 }

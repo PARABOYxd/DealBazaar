@@ -107,7 +107,7 @@ export interface ApiResponse<T> {
   pagination?: Pagination;
 }
 
-export type UserState = "INITIATED" | "VERIFIED" | "STEP1" | "COMPLETED";
+export type UserState = "INITIATED" | "VERIFIED" | "STEP1" | "COMPLETED" | "PENDING";
 
 export interface AuthResponse {
   accessToken: string;

@@ -225,218 +225,40 @@ export default function Home() {
             <CarouselContent>
               {/* Banner 1 - Sell Phone */}
               <CarouselItem className="basis-full">
-                <div className="bg-primary-500 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
-                    <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
-                      {/* Left Content */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="space-y-2 lg:space-y-8 text-center lg:text-left"
-                      >
-                        <div className="space-y-1 sm:space-y-2 lg:space-y-6">
-                          <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
-                            Sell Old{" "}
-                            <span style={{ color: "#13AF9E" }}>Phone</span>
-                          </h1>
-
-                          <p
-                            className="text-[10px] sm:text-sm md:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-                            style={{ color: "#13AF9E" }}
-                          >
-                            From Your Doorstep or At Any of our 200 Stores Pan
-                            India
-                          </p>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
-                          <Button
-                            size="sm"
-                            style={{ backgroundColor: "#13AF9E" }}
-                            className="text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
-                            onClick={openWhatsApp}
-                          >
-                            Sell Now
-                          </Button>
-                        </div>
-                      </motion.div>
-
-                      {/* Right Content - Mobile Mockup */}
-                      <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative flex justify-center lg:justify-end"
-                      >
-                        <div className="relative w-32 h-32 sm:w-40 sm:h-48 md:w-60 md:h-56 lg:w-72 lg:h-72">
-                          {/* Phone Outline */}
-                          <div className="absolute inset-0 bg-black rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
-                            <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
-                              {/* Doorstep Pickup Badge */}
-                              <div
-                                className="px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2"
-                                style={{
-                                  backgroundColor: "#13AF9E",
-                                  color: "#fff",
-                                }}
-                              >
-                                <Truck className="w-2 h-2 md:w-4 md:h-4" />
-                                DOORSTEP PICKUP
-                              </div>
-
-                              {/* 200 Stores Badge */}
-                              <div
-                                className="px-1 py-0.5 md:px-4 md:py-2 rounded-md md:rounded-lg text-[8px] sm:text-[10px] md:text-sm font-semibold flex items-center gap-1 md:gap-2"
-                                style={{
-                                  backgroundColor: "#13AF9E",
-                                  color: "#fff",
-                                }}
-                              >
-                                <MapPin className="w-2 h-2 md:w-4 md:h-4" />
-                                200 STORES PAN INDIA
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Delivery Person Illustration */}
-                          <div
-                            className="absolute -bottom-2 -right-1 sm:-bottom-4 sm:-right-2 md:-bottom-8 md:-right-4 w-8 h-8 sm:w-12 sm:h-12 md:w-20 md:h-20 rounded-full flex items-center justify-center"
-                            style={{ backgroundColor: "#13AF9E" }}
-                          >
-                            <Truck className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
+                <div className="relative w-full h-40 sm:h-56 md:h-64 lg:h-[22rem] rounded-t-3xl rounded-b-3xl overflow-hidden">
+                  <Image
+                    src="/images/banner/banner1.webp"
+                    alt="Sell Phone Banner"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
               </CarouselItem>
 
               {/* Banner 2 - Sell Laptop */}
               <CarouselItem className="basis-full">
-                <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
-                    <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
-                      {/* Left Content */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="space-y-2 lg:space-y-8 text-center lg:text-left"
-                      >
-                        <div className="space-y-1 sm:space-y-2 lg:space-y-6">
-                          <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
-                            Sell Old <span className="text-white">Laptop</span>
-                          </h1>
-
-                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-blue-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                            Get Best Prices for Your Old Laptop. Instant Quotes
-                            & Free Pickup
-                          </p>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
-                          <Button
-                            size="sm"
-                            className="bg-black hover:bg-gray-800 text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
-                            onClick={openWhatsApp}
-                          >
-                            Get Quote
-                          </Button>
-                        </div>
-                      </motion.div>
-
-                      {/* Right Content - Laptop Mockup */}
-                      <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative flex justify-center lg:justify-end"
-                      >
-                        <div className="relative w-32 h-32 sm:w-40 sm:h-48 md:w-60 md:h-56 lg:w-72 lg:h-72">
-                          {/* Laptop Outline */}
-                          <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
-                            <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
-                              <Laptop className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-blue-600" />
-                              <div className="text-center">
-                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">
-                                  Best Price
-                                </div>
-                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">
-                                  Guaranteed
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
+                <div className="relative w-full h-40 sm:h-56 md:h-64 lg:h-[22rem] rounded-t-3xl rounded-b-3xl overflow-hidden">
+                  <Image
+                    src="/images/banner/banner2.webp"
+                    alt="Sell Laptop Banner"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
               </CarouselItem>
 
               {/* Banner 3 - Sell Furniture */}
               <CarouselItem className="basis-full">
-                <div className="bg-gradient-to-r from-primary-600 to-primary-800 text-white relative overflow-hidden rounded-t-3xl rounded-b-3xl">
-                  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 lg:py-8">
-                    <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 lg:gap-12 items-center">
-                      {/* Left Content */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="space-y-2 lg:space-y-8 text-center lg:text-left"
-                      >
-                        <div className="space-y-1 sm:space-y-2 lg:space-y-6">
-                          <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
-                            Sell Old{" "}
-                            <span className="text-white">Furniture</span>
-                          </h1>
-
-                          <p className="text-[10px] sm:text-sm md:text-lg lg:text-xl text-primary-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                            Transform Your Space. Sell Old Furniture & Get Cash
-                            Instantly
-                          </p>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 justify-center lg:justify-start">
-                          <Button
-                            size="sm"
-                            className="bg-black hover:bg-gray-800 text-white px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-xs md:px-8 md:py-4 md:text-lg font-semibold"
-                            onClick={openWhatsApp}
-                          >
-                            Sell Furniture
-                          </Button>
-                        </div>
-                      </motion.div>
-
-                      {/* Right Content - Furniture Mockup */}
-                      <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative flex justify-center lg:justify-end"
-                      >
-                        <div className="relative w-32 h-32 sm:w-40 sm:h-48 md:w-60 md:h-56 lg:w-72 lg:h-72">
-                          {/* Furniture Outline */}
-                          <div className="absolute inset-0 bg-gray-800 rounded-xl md:rounded-3xl p-1 sm:p-2 md:p-4">
-                            <div className="bg-white rounded-lg md:rounded-2xl h-full p-1 sm:p-2 md:p-6 flex flex-col items-center justify-center space-y-1 md:space-y-4">
-                              <Sofa className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-primary-600" />
-                              <div className="text-center">
-                                <div className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-800">
-                                  Free Pickup
-                                </div>
-                                <div className="text-[8px] sm:text-[10px] md:text-xs text-gray-600">
-                                  Doorstep Service
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
+                <div className="relative w-full h-40 sm:h-56 md:h-64 lg:h-[22rem] rounded-t-3xl rounded-b-3xl overflow-hidden">
+                  <Image
+                    src="/images/banner/banner3.webp"
+                    alt="Sell Furniture Banner"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
               </CarouselItem>
             </CarouselContent>

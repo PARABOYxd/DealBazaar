@@ -52,25 +52,26 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -4, scale: 1.02 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className={cn("group h-full", className)}
-    >
-      <Card className="bg-white border border-gray-200 shadow-lg hover:shadow-xl overflow-hidden h-full transition-all duration-300 rounded-xl flex flex-col">
-        {/* Product Image */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-          <Image
-            src={product.images && product.images[0] ? `/images/${product.images[0]}` : '/images/placeholder-product.jpg'}
-            alt={product.name}
-            fill
-            className={cn(
-              "object-contain transition-all duration-500 group-hover:scale-110",
-              imageLoaded ? "opacity-100" : "opacity-0"
-            )}
+    <Link href={`/products/${product.slug}`} passHref>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        whileHover={{ y: -4, scale: 1.02 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={cn("group h-full cursor-pointer", className)}
+      >
+        <Card className="bg-white border border-gray-200 shadow-lg hover:shadow-xl overflow-hidden h-full transition-all duration-300 rounded-xl flex flex-col">
+          {/* Product Image */}
+          <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+            <Image
+              src={product.images && product.images[0] ? `/images/${product.images[0]}` : '/images/placeholder-product.jpg'}
+              alt={product.name}
+              fill
+              className={cn(
+                "object-contain transition-all duration-500 group-hover:scale-110",
+                imageLoaded ? "opacity-100" : "opacity-0"
+              )}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             onLoad={() => setImageLoaded(true)}
           />
@@ -124,5 +125,6 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
         </CardContent>
       </Card>
     </motion.div>
+    </Link>
   );
 }

@@ -9,7 +9,8 @@ class ApiService {
     let token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
     const headers = new Headers(options?.headers);
 
-    if (!headers.has('Content-Type')) {
+    // Only set Content-Type to application/json if body is not FormData
+    if (!(options?.body instanceof FormData) && !headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }
     if (token && !headers.has('Authorization')) {
@@ -22,7 +23,7 @@ class ApiService {
         headers,
       });
 
-      if (response.status === 401) {
+      if (response.status === 401 || response.status === 403) {
         const cookies = parseCookies();
         const refreshToken = cookies['refresh_token'];
 
@@ -105,20 +106,16 @@ class ApiService {
 
   // OTP
   async sendOtp(mobileNumber: string): Promise<any> {
-    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+    return this.fetchApi(`/auth/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobileNumber }),
     });
-    return res.json();
   }
   async verifyOtp(mobileNumber: string, otp: string): Promise<any> {
-    const res = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+    return this.fetchApi(`/auth/verify-otp`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobileNumber, otp }),
     });
-    return res.json();
   }
 
   async updateProfile(profileData: {
@@ -128,19 +125,10 @@ class ApiService {
     baseAddress: string;
     pincode: string;
   }): Promise<any> {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      throw new Error('No authentication token found.');
-    }
-    const res = await fetch(`${API_BASE_URL}/customer/update-profile`, {
+    return this.fetchApi(`/customer/update-profile`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
       body: JSON.stringify(profileData),
     });
-    return res.json();
   }
 
   
@@ -200,10 +188,10 @@ class ApiService {
       formData.append(`image${index}`, file);
     });
 
-    return fetch(`${API_BASE_URL}/upload/images`, {
+    return this.fetchApi(`/upload/images`, {
       method: 'POST',
       body: formData,
-    }).then(res => res.json());
+    });
   }
 
   // Testimonials

@@ -6,6 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { apiService } from '@/lib/api';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/components/providers/auth-provider';
 import { UserState } from '@/types';
@@ -26,11 +32,7 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
     dob: '',
     gender: '',
     baseAddress: '',
-    postOfficeName: '',
     pincode: '',
-    city: '',
-    district: '',
-    state: '',
   });
 
   const [currentFormStep, setCurrentFormStep] = useState(1);
@@ -48,8 +50,6 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
             handleClose();
             break;
           case 'STEP1':
-            setCurrentFormStep(4);
-            break;
           case 'VERIFIED':
           case 'INITIATED':
             setCurrentFormStep(3);
@@ -73,11 +73,7 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
       dob: '',
       gender: '',
       baseAddress: '',
-      postOfficeName: '',
       pincode: '',
-      city: '',
-      district: '',
-      state: '',
     });
     setCurrentFormStep(1);
     setLoginError('');
@@ -117,8 +113,8 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
         const response = await apiService.verifyOtp(loginData.mobileNumber, loginData.otp);
         if (response.status === 200 && response.data?.[0]?.accessToken) {
           const loginResponse = response.data[0]; // Get the full LoginResponse object
-          const { accessToken, status } = loginResponse; // Extract accessToken and status
-          login(accessToken, loginResponse); // Pass the full LoginResponse object
+          const { accessToken, status, ...restOfUser } = loginResponse; // Extract accessToken and status
+          login(accessToken, { ...restOfUser, status, phoneNumber: loginData.mobileNumber }); // Pass the full LoginResponse object
           setUserStatus(status);
 
           switch (status) {
@@ -145,65 +141,33 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
     }
   };
 
-  // Profile submit
-  const handleProfileSubmit = async () => {
+  const handleProfileAndAddressSubmit = async () => {
     setLoginError('');
     setLoginLoading(true);
     try {
-      const response = await apiService.updateProfile({
+      const profileData = {
         name: loginData.name,
         dob: loginData.dob,
         gender: loginData.gender,
-      });
-      if (response.status === 200) {
-        if (response.data?.[0]) setUserStatus(response.data[0].status);
-        updateUser({
-          name: loginData.name,
-          dob: loginData.dob,
-          gender: loginData.gender,
-          status: response.data?.[0]?.status,
-        });
-        setCurrentFormStep(4);
-      } else setLoginError(response.message || 'Failed to update profile');
-    } catch (err: any) {
-      setLoginError('Failed to update profile. Please try again.');
-      if ((err as any)?.status === 401) {
-        logout();
-        handleClose();
-      }
-    } finally {
-      setLoginLoading(false);
-    }
-  };
-
-  // Address submit
-  const handleAddressSubmit = async () => {
-    setLoginError('');
-    setLoginLoading(true);
-    try {
-      const response = await apiService.updateAddress({
         baseAddress: loginData.baseAddress,
-        postOfficeName: loginData.postOfficeName,
         pincode: loginData.pincode,
-        city: loginData.city,
-        district: loginData.district,
-        state: loginData.state,
-      });
-      if (response.status === 200 && response.data?.[0]?.status === 'COMPLETED') {
-        updateUser({
-          baseAddress: loginData.baseAddress,
-          postOfficeName: loginData.postOfficeName,
-          pincode: loginData.pincode,
-          city: loginData.city,
-          district: loginData.district,
-          state: loginData.state,
-          status: response.data?.[0]?.status,
-        });
+      };
+
+      const response = await apiService.updateProfile(profileData);
+
+      if (response.status === 200) {
+        const updatedUser = {
+          ...loginData,
+          status: response.data?.[0]?.status || user?.status,
+        };
+        updateUser(updatedUser);
         onSuccess?.();
         handleClose();
-      } else setLoginError(response.message || 'Failed to update address');
+      } else {
+        setLoginError(response.message || 'Failed to update profile.');
+      }
     } catch (err: any) {
-      setLoginError('Failed to update address. Please try again.');
+      setLoginError('Failed to update profile. Please try again.');
       if ((err as any)?.status === 401) {
         logout();
         handleClose();
@@ -217,15 +181,14 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
     switch (currentFormStep) {
       case 1: return 'Login to Your Account';
       case 2: return 'Verify OTP';
-      case 3: return 'Complete Your Profile (1/2)';
-      case 4: return 'Complete Your Address (2/2)';
+      case 3: return 'Complete Your Profile';
       default: return 'Login';
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md w-full mx-4">
+      <DialogContent className="sm:max-w-md w-full mx-auto p-4">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold text-black">
             {getDialogTitle()}
@@ -284,99 +247,74 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
           )}
 
           {currentFormStep === 3 && (
-            <div className="space-y-4">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                value={loginData.name}
-                onChange={e => setLoginData({ ...loginData, name: e.target.value })}
-              />
-
-              <Label htmlFor="dob">Date of Birth</Label>
-              <Input
-                id="dob"
-                type="date"
-                value={loginData.dob}
-                onChange={e => setLoginData({ ...loginData, dob: e.target.value })}
-              />
-
-              <Label htmlFor="gender">Gender</Label>
-              <Select
-                value={loginData.gender}
-                onValueChange={val => setLoginData({ ...loginData, gender: val })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Male">Male</SelectItem>
-                  <SelectItem value="Female">Female</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button
-                onClick={handleProfileSubmit}
-                className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                disabled={!loginData.name || !loginData.dob || !loginData.gender}
-              >
-                Next: Address Details
-              </Button>
-              {loginError && <div className="text-red-500 text-center">{loginError}</div>}
-            </div>
-          )}
-
-          {currentFormStep === 4 && (
-            <div className="space-y-4">
-              <Label htmlFor="baseAddress">Base Address</Label>
-              <Input
-                id="baseAddress"
-                value={loginData.baseAddress}
-                onChange={e => setLoginData({ ...loginData, baseAddress: e.target.value })}
-              />
-
-              <Label htmlFor="postOfficeName">Post Office Name</Label>
-              <Input
-                id="postOfficeName"
-                value={loginData.postOfficeName}
-                onChange={e => setLoginData({ ...loginData, postOfficeName: e.target.value })}
-              />
-
-              <Label htmlFor="pincode">Pincode</Label>
-              <Input
-                id="pincode"
-                value={loginData.pincode}
-                onChange={e => setLoginData({ ...loginData, pincode: e.target.value })}
-                maxLength={6}
-              />
-
-              <Label htmlFor="city">City</Label>
-              <Input
-                id="city"
-                value={loginData.city}
-                onChange={e => setLoginData({ ...loginData, city: e.target.value })}
-              />
-
-              <Label htmlFor="district">District</Label>
-              <Input
-                id="district"
-                value={loginData.district}
-                onChange={e => setLoginData({ ...loginData, district: e.target.value })}
-              />
-
-              <Label htmlFor="state">State</Label>
-              <Input
-                id="state"
-                value={loginData.state}
-                onChange={e => setLoginData({ ...loginData, state: e.target.value })}
-              />
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input id="name" value={loginData.name} onChange={e => setLoginData({ ...loginData, name: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dob">Date of Birth</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !loginData.dob && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {loginData.dob ? format(new Date(loginData.dob), "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={loginData.dob ? new Date(loginData.dob) : undefined}
+                        onSelect={(date) => setLoginData({ ...loginData, dob: date ? format(date, "yyyy-MM-dd") : '' })}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Gender</Label>
+                <RadioGroup
+                  value={loginData.gender}
+                  onValueChange={(val) => setLoginData({ ...loginData, gender: val })}
+                  className="flex space-x-4 pt-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Male" id="male" />
+                    <Label htmlFor="male">Male</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Female" id="female" />
+                    <Label htmlFor="female">Female</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Other" id="other" />
+                    <Label htmlFor="other">Other</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="baseAddress">Base Address</Label>
+                <Input id="baseAddress" value={loginData.baseAddress} onChange={e => setLoginData({ ...loginData, baseAddress: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="pincode">Pincode</Label>
+                <Input id="pincode" value={loginData.pincode} onChange={e => setLoginData({ ...loginData, pincode: e.target.value })} maxLength={6} />
+              </div>
 
               <Button
-                onClick={handleAddressSubmit}
-                className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                disabled={!loginData.baseAddress || !loginData.pincode || !loginData.city || loginLoading}
+                onClick={handleProfileAndAddressSubmit}
+                className="w-full bg-teal-500 hover:bg-teal-600 text-white text-center"
+                disabled={!loginData.name || !loginData.dob || !loginData.gender || !loginData.baseAddress || !loginData.pincode || loginLoading}
               >
-                Complete Registration
+                {loginLoading ? 'Saving...' : 'Complete Registration'}
               </Button>
               {loginError && <div className="text-red-500 text-center">{loginError}</div>}
             </div>

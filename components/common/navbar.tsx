@@ -86,6 +86,8 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
 
   const handleLogin = () => setIsLoginOpen(true);
 
+  
+
   return (
     <>
       {/* Desktop Navbar */}
@@ -132,9 +134,11 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                         </p>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile">
+                          <User className="mr-2 h-4 w-4" />
+                          <span>Profile</span>
+                        </Link>
                       </DropdownMenuItem>
                       {user?.status !== 'COMPLETED' && (
                         <DropdownMenuItem onClick={handleLogin}>
@@ -460,12 +464,19 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48" align="end" forceMount>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
                 {user?.status !== 'COMPLETED' && (
                   <DropdownMenuItem onClick={handleLogin}>
                     <CheckCircle className="mr-2 h-4 w-4" />
                     <span>Complete Profile</span>
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>

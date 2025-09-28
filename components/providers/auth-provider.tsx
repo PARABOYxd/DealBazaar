@@ -9,7 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: User | null;
-  login: (accessToken: string, userData: User, refreshToken?: string) => Promise<void>;
+  login: (accessToken: string, userData: Partial<User>, refreshToken?: string) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
   setRedirectPath: (path: string) => void;
@@ -95,16 +95,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initializeAuth();
   }, []);
 
-  const login = async (accessToken: string, userData: User, refreshToken?: string) => { // Changed userData type to LoginResponse
+  const login = async (accessToken: string, userData: Partial<User>, refreshToken?: string) => {
     console.log('login: Attempting to log in');
     localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
-    localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+    
+    const newUser = { ...user, ...userData } as User;
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(newUser));
 
     // Store the isNew flag separately as requested by the user
-     console.log('risga' , userData);
-    if (typeof userData.status !== 'undefined') {
-      console.log('risga' , userData.status);
-      localStorage.setItem(USER_IS_NEW_STATUS_KEY, JSON.stringify(userData.status));
+     console.log('risga' , newUser);
+    if (typeof newUser.status !== 'undefined') {
+      console.log('risga' , newUser.status);
+      localStorage.setItem(USER_IS_NEW_STATUS_KEY, JSON.stringify(newUser.status));
       console.log('login: user status stored separately as user_is_new_status');
     }
 
@@ -116,7 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setIsAuthenticated(true);
-    setUser(userData);
+    setUser(newUser);
     console.log('login: isAuthenticated set to true, user data set');
   };
 

@@ -1,49 +1,77 @@
 import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
 import { clearAuthData } from '@/components/providers/auth-provider';
+import { parseCookies, setCookie } from 'nookies';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class ApiService {
-  private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T) {
-    try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-      const headers = new Headers(options?.headers);
-      
-      // Set default headers if not already present
-      if (!headers.has('Content-Type')) {
-        headers.set('Content-Type', 'application/json');
-      }
-      if (token && !headers.has('Authorization')) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+  private async fetchApi<T>(endpoint: string, options?: RequestInit, fallbackData?: T): Promise<ApiResponse<T>> {
+    let token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+    const headers = new Headers(options?.headers);
 
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    if (token && !headers.has('Authorization')) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    try {
+      let response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
-        headers
+        headers,
       });
 
-      // Handle 401 Unauthorized specifically
       if (response.status === 401) {
-        if (typeof window !== 'undefined') {
-          clearAuthData(); // Clear authentication data
-          window.location.href = '/signup'; // Redirect to login page
+        const cookies = parseCookies();
+        const refreshToken = cookies['refresh_token'];
+
+        if (refreshToken) {
+          try {
+            const refreshResponse = await this.refreshToken(refreshToken);
+
+            if (refreshResponse.status === 200 && refreshResponse.data?.accessToken) {
+              token = refreshResponse.data.accessToken;
+              localStorage.setItem('access_token', token);
+              if (refreshResponse.data.refreshToken) {
+                setCookie(null, 'refresh_token', refreshResponse.data.refreshToken, { path: '/', maxAge: 30 * 24 * 60 * 60 });
+              }
+
+              headers.set('Authorization', `Bearer ${token}`);
+              response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers,
+              });
+            } else {
+              // Refresh token is invalid
+              throw new Error('Invalid refresh token');
+            }
+          } catch (refreshError) {
+            console.error('Token refresh failed:', refreshError);
+            clearAuthData();
+            if (typeof window !== 'undefined') {
+              window.location.href = '/signup';
+            }
+            throw new Error('Unauthorized: Session expired.');
+          }
+        } else {
+            clearAuthData();
+            if (typeof window !== 'undefined') {
+              window.location.href = '/signup';
+            }
+            throw new Error('Unauthorized: No refresh token.');
         }
-        throw new Error('Unauthorized: Redirecting to login.');
       }
 
-      // try to parse JSON (backend returns { status, data, pagination, message, error })
       const json = await response.json().catch(() => null);
 
-      // If server returned non-JSON but non-ok status, throw
       if (!response.ok) {
         const errMsg = (json && (json as any).message) || response.statusText || `HTTP ${response.status}`;
         throw new Error(errMsg);
       }
 
-      // If JSON exists, return it as-is (assumes it matches your ApiResponse shape)
       if (json) return json as ApiResponse<T>;
 
-      // If no JSON (rare), return a synthetic success shape
       return {
         status: response.status,
         data: (fallbackData ?? ({} as T)),
@@ -51,10 +79,15 @@ class ApiService {
         message: '',
         error: '',
       } as unknown as ApiResponse<T>;
+
     } catch (error) {
       console.error(`API Error for ${endpoint}:`, error);
 
-      // return a fallback object consistent with your backend shape
+      if (error instanceof Error && error.message.includes('Unauthorized')) {
+        // Don't return fallback data for auth errors, let the redirect happen
+        throw error;
+      }
+
       return {
         status: 500,
         data: (fallbackData ?? (Array.isArray(fallbackData) ? [] : ({} as T))),
@@ -88,41 +121,24 @@ class ApiService {
     return res.json();
   }
 
-  async updateProfile(profileData: { name: string; dob: string; gender: string }): Promise<any> {
-    const token = localStorage.getItem('access_token'); // Assuming token is stored in localStorage
+  async updateProfile(profileData: {
+    name: string;
+    dob: string;
+    gender: string;
+    baseAddress: string;
+    pincode: string;
+  }): Promise<any> {
+    const token = localStorage.getItem('access_token');
     if (!token) {
       throw new Error('No authentication token found.');
     }
     const res = await fetch(`${API_BASE_URL}/customer/update-profile`, {
-      method: 'PUT', // Assuming PUT for update
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(profileData),
-    });
-    return res.json();
-  }
-
-  async updateAddress(addressData: {
-    baseAddress: string;
-    postOfficeName: string;
-    pincode: string;
-    city: string;
-    district: string;
-    state: string;
-  }): Promise<any> {
-    const token = localStorage.getItem('access_token'); // Assuming token is stored in localStorage
-    if (!token) {
-      throw new Error('No authentication token found.');
-    }
-    const res = await fetch(`${API_BASE_URL}/customer/update-address`, {
-      method: 'PUT', // Assuming PUT for update
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(addressData),
     });
     return res.json();
   }

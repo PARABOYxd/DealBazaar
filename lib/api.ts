@@ -134,7 +134,7 @@ class ApiService {
   
 
   // Products
-  async getProducts(filters?: {
+  async getSubcategory(filters?: {
     category?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -153,7 +153,7 @@ class ApiService {
       });
     }
 
-    return this.fetchApi(`/products?${params.toString()}`);
+    return this.fetchApi(`/subcategory?${params.toString()}`);
   }
 
   async getProductBySlug(slug: string): Promise<ApiResponse<Product>> {
@@ -290,9 +290,9 @@ export interface HomePageData {
 // Batched homepage data fetcher
 export async function getHomePageData(): Promise<HomePageData> {
   const [electronics, homeAppliances, furniture, testimonials] = await Promise.all([
-    apiService.getProducts({ category: 'electronics' }),
-    apiService.getProducts({ category: 'home-appliances' }),
-    apiService.getProducts({ category: 'furniture' }),
+    apiService.getSubcategory({ category: 'electronics' }),
+    apiService.getSubcategory({ category: 'home-appliances' }),
+    apiService.getSubcategory({ category: 'furniture' }),
     apiService.getTestimonials(9),
   ]);
   return {

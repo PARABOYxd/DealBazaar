@@ -33,7 +33,7 @@ export default function ProductsPage() {
   } = useInfiniteQuery({
     queryKey: ['products', { category, search: searchTermToUse }],
     queryFn: ({ pageParam = 0 }) =>
-      apiService.getProducts({
+      apiService.getSubcategory({
         category: category || undefined,
         searchParam: searchTermToUse,
         page: pageParam,

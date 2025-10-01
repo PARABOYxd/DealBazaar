@@ -87,7 +87,7 @@ const LazyProductSection = ({ title, category, whatsappNumber }: LazyProductSect
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['products', category],
-    queryFn: () => apiService.getProducts({ category, size: 6 }),
+    queryFn: () => apiService.getSubcategory({ category, size: 6 }),
     enabled: inView,
   });
 

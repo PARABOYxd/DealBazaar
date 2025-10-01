@@ -21,7 +21,7 @@ export async function GET() {
 
   try {
     const [productsResponse, blogResponse] = await Promise.all([
-      apiService.getProducts({ size: 1000 }),
+      apiService.getSubcategory({ size: 1000 }),
       apiService.getBlogPosts({ limit: 1000 }),
     ]);
 

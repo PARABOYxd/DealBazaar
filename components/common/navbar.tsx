@@ -48,7 +48,7 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
   useEffect(() => {
     if (debouncedSearchTerm) {
       setIsSearchLoading(true);
-      apiService.getProducts({ searchParam: debouncedSearchTerm })
+      apiService.getSubcategory({ searchParam: debouncedSearchTerm })
         .then((res) => {
           setSearchResults(res.data || []);
         })

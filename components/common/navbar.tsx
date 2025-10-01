@@ -15,6 +15,8 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/components/providers/auth-provider';
 import { apiService } from '@/lib/api';
 import { LoginModal } from './login-modal';
+import { useDebounce } from '@/hooks/use-debounce';
+import { Product } from '@/types';
 
 const navigation = [
   { name: 'All', href: '/' },
@@ -38,6 +40,25 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
   const [isLocating, setIsLocating] = useState(true);
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const debouncedSearchTerm = useDebounce(searchTerm, 1500);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      setIsSearchLoading(true);
+      apiService.getProducts({ searchParam: debouncedSearchTerm })
+        .then((res) => {
+          setSearchResults(res.data || []);
+        })
+        .finally(() => {
+          setIsSearchLoading(false);
+        });
+    } else {
+      setSearchResults([]);
+    }
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,8 +127,31 @@ export function Navbar({ whatsappNumber, phoneNumber }: NavbarProps) {
                 <span className="text-teal-600 font-bold text-lg">Bhej Do</span>
               </Link>
               {/* Search Bar */}
-              <div className="flex-1 max-w-xl mx-6">
-                <SearchBar placeholder="Search for electronics, furniture & more" />
+              <div className="flex-1 max-w-xl mx-6 relative">
+                <SearchBar
+                  placeholder="Search for electronics, furniture & more"
+                  value={searchTerm}
+                  onChange={setSearchTerm}
+                />
+                {searchTerm && (
+                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-lg shadow-lg z-10">
+                    {isSearchLoading && <div className="p-4 text-center">Loading...</div>}
+                    {!isSearchLoading && searchResults.length === 0 && debouncedSearchTerm && (
+                      <div className="p-4 text-center">No results found.</div>
+                    )}
+                    {!isSearchLoading && searchResults.length > 0 && (
+                      <ul>
+                        {searchResults.slice(0, 6).map((product) => (
+                          <li key={product.id}>
+                            <Link href={`/products/${product.slug}`} className="block p-4 hover:bg-gray-100">
+                              {product.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
               </div>
               {/* Right Side - Location & Login */}
               <div className="flex items-center space-x-4">

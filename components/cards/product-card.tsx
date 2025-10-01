@@ -88,9 +88,11 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
 
           {/* Category Badge */}
           <div className="flex items-center gap-2">
-            <div className="bg-teal-100 text-teal-700 px-2 py-1 rounded text-xs font-medium">
-              {product.category.replace('-', ' ').toUpperCase()}
-            </div>
+            {product.category && (
+              <div className="bg-teal-100 text-teal-700 px-2 py-1 rounded text-xs font-medium">
+                {product.category.replace('-', ' ').toUpperCase()}
+              </div>
+            )}
             <div className="flex items-center gap-1 text-sm">
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
               <span className="font-semibold">4.9</span>

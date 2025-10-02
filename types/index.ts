@@ -1,9 +1,15 @@
+export interface Variant {
+  id: string;
+  name: string;
+}
+
 export interface Product {
   id: string;
   slug: string;
   name: string;
   description: string;
   category: string;
+  subcategorySlug: string;
   images: string[];
   estimatePriceMin: number;
   estimatePriceMax: number;
@@ -11,6 +17,7 @@ export interface Product {
   brand?: string;
   model?: string;
   features: string[];
+  variants?: Variant[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -45,6 +52,28 @@ export interface PickupRequest {
   notes?: string;
   status?: 'pending' | 'confirmed' | 'completed' | 'cancelled';
 }
+
+export interface ScheduleRequest {
+  items: {
+    category: string;
+    product: string;
+    brand?: string;
+    variant?: string;
+    desc: string;
+    quantity: number;
+    condition: string;
+    images?: string[];
+  }[];
+  preferredDate: string;
+  preferredTime: string;
+  existingAddress: boolean;
+  addressId?: number;
+  pincode: string;
+  alternateMobileNo?: string;
+  additionalNotes?: string;
+  userPrice?: number;
+}
+
 
 export interface Testimonial {
   id: string;

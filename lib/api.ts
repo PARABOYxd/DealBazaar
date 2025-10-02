@@ -1,4 +1,4 @@
-import { ApiResponse, Product, Category, PickupRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
+import { ApiResponse, Product, Category, PickupRequest, ScheduleRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
 import { clearAuthData } from '@/components/providers/auth-provider';
 import { parseCookies, setCookie } from 'nookies';
 
@@ -156,6 +156,27 @@ class ApiService {
     return this.fetchApi(`/subcategory?${params.toString()}`);
   }
 
+  async getProductsBySubcategory(subcategory: string, filters?: {
+    minPrice?: number;
+    maxPrice?: number;
+    condition?: string;
+    searchParam?: string;
+    page?: number;
+    size?: number;
+  }): Promise<ApiResponse<Product[]>> {
+    const params = new URLSearchParams();
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    return this.fetchApi(`/subcategory/${subcategory}?${params.toString()}`);
+  }
+
   async getProductBySlug(slug: string): Promise<ApiResponse<Product>> {
     return this.fetchApi(`/products/${slug}`);
   }
@@ -179,6 +200,19 @@ class ApiService {
     return this.fetchApi('/pickup-requests', {
       method: 'POST',
       body: JSON.stringify(request),
+    });
+  }
+
+  async createScheduleRequest(request: ScheduleRequest): Promise<ApiResponse<any>> {
+    return this.fetchApi('/schedule', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getSchedules(): Promise<ApiResponse<ScheduleRequest[]>> {
+    return this.fetchApi(`/schedule`, {
+      method: 'GET',
     });
   }
 

@@ -21,6 +21,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const openWhatsApp = (e: React.MouseEvent) => {
+    e.stopPropagation();
     e.preventDefault();
     const message = encodeURIComponent(`Hi! I'm interested in selling my ${product.name}. Can you provide more details and best price?`);
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
@@ -52,7 +53,7 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
   };
 
   return (
-    <Link href={`/products/${product.slug}`} passHref>
+        <Link href={`/subcategory/${product.slug}`} passHref>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -81,22 +82,16 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
         </div>
 
         <CardContent className="p-4 space-y-3 flex-grow flex flex-col">
-          {/* Product Name */}
-          <h3 className="font-bold text-black text-sm leading-tight flex-grow">
-            {product.name}
-          </h3>
-
-          {/* Category Badge */}
-          <div className="flex items-center gap-2">
+          {/* Product Name and Category Badge */}
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
+            <h3 className="font-bold text-black text-sm leading-tight">
+              {product.name}
+            </h3>
             {product.category && (
-              <div className="bg-teal-100 text-teal-700 px-2 py-1 rounded text-xs font-medium">
+              <div className="bg-teal-100 text-teal-700 px-1 py-0.5 rounded text-[0.6rem] md:text-xs font-medium">
                 {product.category.replace('-', ' ').toUpperCase()}
               </div>
             )}
-            <div className="flex items-center gap-1 text-sm">
-              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span className="font-semibold">4.9</span>
-            </div>
           </div>
 
           {/* Pricing or Get Quote */}
@@ -116,14 +111,28 @@ export function ProductCard({ product, whatsappNumber, className }: ProductCardP
             </div>
           )}
 
-          {/* Action Button */}
-          <Button
-            onClick={openWhatsApp}
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 mt-auto"
-          >
-            <MessageCircle className="w-4 h-4 mr-2" />
-            Get Quote
-          </Button>
+          {/* Action Buttons */}
+          <div className="mt-auto flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+            <Button
+              onClick={openWhatsApp}
+              className="w-full md:flex-1 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2"
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Get Quote
+            </Button>
+            <Link href={`/subcategory/${product.slug}`} passHref className="w-full md:flex-1">
+              <Button
+                asChild
+                variant="outline"
+                className="w-full font-semibold py-2"
+              >
+                <a>
+                  Sell Now
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </a>
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </motion.div>

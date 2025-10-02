@@ -53,7 +53,7 @@ export async function GET() {
     .map(
       (product) => `
   <url>
-    <loc>${baseUrl}/product/${product.slug}</loc>
+    <loc>${baseUrl}/subcategory/${product.slug}</loc>
     <lastmod>${product.updatedAt}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, Mail, Phone, Home, MapPin, Edit, Calendar, GitMerge } from 'lucide-react';
+import { User, Mail, Phone, Home, MapPin, Edit, Calendar, GitMerge, History } from 'lucide-react';
 import { LoginModal } from '@/components/common/login-modal';
 import { Separator } from '@/components/ui/separator';
 
@@ -58,7 +58,11 @@ export default function ProfilePage() {
                   <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-800">{user.name}</CardTitle>
                   <CardDescription className="text-base text-gray-500 mt-1">{user.email}</CardDescription>
                 </div>
-                <div className="sm:ml-auto pt-4 sm:pt-0">
+                <div className="sm:ml-auto pt-4 sm:pt-0 flex gap-2">
+                  <Button onClick={() => router.push('/profile/history')}>
+                    <History className="w-4 h-4 mr-2" />
+                    History
+                  </Button>
                   <Button onClick={() => setIsLoginModalOpen(true)}>
                     <Edit className="w-4 h-4 mr-2" />
                     Edit Profile

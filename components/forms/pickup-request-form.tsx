@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { Plus, X, Upload, MessageCircle, AlertCircle } from 'lucide-react';
+import { Plus, X, Upload, MessageCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +17,7 @@ import { apiService } from '@/lib/api';
 import { PickupRequest } from '@/types';
 import Image from 'next/image';
 import { useAuth } from '@/components/providers/auth-provider';
+import { useRouter } from 'next/navigation';
 
 const pickupSchema = z.object({
   // Removed address and email from schema as requested
@@ -44,6 +45,11 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const { user } = useAuth();
+  const router = useRouter();
+
+  const goBack = () => {
+    router.push('/');
+  };
 
   const {
     register,
@@ -194,6 +200,17 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
     >
       <Card>
         <CardHeader className="text-center">
+          <div className="flex items-center justify-between mb-4">
+            <Button 
+              variant="outline" 
+              onClick={goBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Button>
+            <div className="flex-1"></div>
+          </div>
           <CardTitle className="text-2xl">Request Free Pickup</CardTitle>
           <p className="text-gray-600">
             Fill out the form below and we&apos;ll schedule a free pickup for your items

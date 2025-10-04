@@ -37,7 +37,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { apiService } from "@/lib/api";
 import { generateSEO } from "@/lib/seo";
 import {
   Carousel,
@@ -49,10 +48,13 @@ import {
 } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Autoplay from "embla-carousel-autoplay";
-import { getHomePageData, type HomePageData } from "@/lib/api";
+import { getHomePageData, type HomePageData, apiService } from "@/lib/api";
 import LazyProductSection from "@/components/common/lazy-product-section";
+import { useAuth } from "@/components/providers/auth-provider";
+import { LoginModal } from "@/components/common/login-modal";
 import dynamic from "next/dynamic";
 import { useInView } from "react-intersection-observer";
+import { useRouter } from "next/navigation";
 
 // Dynamically import the FAQ section for faster initial load
 const FaqSection = dynamic(() => import("@/components/common/faq-section"), {
@@ -92,6 +94,57 @@ function LazyFaqWrapper() {
 }
 
 export default function Home() {
+  const { isAuthenticated, user } = useAuth();
+  const router = useRouter();
+  const [isLoginOpen, setIsLoginOpen] = React.useState(false);
+
+  // Simple customer details API call when authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      console.log('User is authenticated, fetching customer details...');
+      apiService.getCustomerDetails()
+        .then(response => {
+          console.log('Customer details fetched:', response);
+        })
+        .catch(error => {
+          console.error('Error fetching customer details:', error);
+        });
+    }
+  }, [isAuthenticated]);
+
+  // Handle Schedule Pickup button click
+  const handleSchedulePickup = () => {
+    if (!isAuthenticated) {
+      // User not logged in - show login modal
+      setIsLoginOpen(true);
+      return;
+    }
+
+    if (!user) {
+      // User data not available - show login modal
+      setIsLoginOpen(true);
+      return;
+    }
+
+    // Check user profile status
+    const userStatus = user.status || localStorage.getItem('user_profile_status');
+    
+    if (userStatus === 'PENDING' || userStatus === 'INITIATED' || userStatus === 'VERIFIED' || userStatus === 'STEP1') {
+      // Profile not complete - show login modal in edit mode
+      setIsLoginOpen(true);
+      return;
+    }
+
+    if (userStatus === 'COMPLETED') {
+      // Profile complete - navigate to pickup request
+      router.push('/pickup-request');
+      return;
+    }
+
+    // Default case - show login modal
+    setIsLoginOpen(true);
+  };
+
   const heroAutoplay = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
@@ -573,12 +626,10 @@ export default function Home() {
                 size="lg"
                 variant="outline"
                 className="border-white text-black hover:bg-white hover:text-black px-8 py-4 text-lg font-semibold"
-                asChild
+                onClick={handleSchedulePickup}
               >
-                <Link href="/pickup-request">
-                  Schedule Pickup
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
+                Schedule Pickup
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
 
@@ -602,6 +653,13 @@ export default function Home() {
         {/* Teal Accent Bar */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-500"></div>
       </section>
+
+      {/* Login Modal */}
+      <LoginModal 
+        open={isLoginOpen} 
+        onOpenChange={setIsLoginOpen}
+        isEditMode={true}
+      />
     </>
   );
 }

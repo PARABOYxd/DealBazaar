@@ -119,12 +119,29 @@ export function LoginModal({ open, onOpenChange, onSuccess, isEditMode = false }
         const response = await apiService.verifyOtp(loginData.mobileNumber, loginData.otp);
         if (response.status === 200 && response.data?.[0]?.accessToken) {
           const loginResponse = response.data[0]; // Get the full LoginResponse object
-          const { accessToken, status, ...restOfUser } = loginResponse; // Extract accessToken and status
-          login(accessToken, { ...restOfUser, status, phoneNumber: loginData.mobileNumber }); // Pass the full LoginResponse object
+          const { accessToken, status, refreshToken, ...restOfUser } = loginResponse; // Extract accessToken, status, and refreshToken
+          login(accessToken, { ...restOfUser, status, phoneNumber: loginData.mobileNumber }, refreshToken); // Pass refreshToken as third parameter
           setUserStatus(status);
 
           switch (status) {
             case 'COMPLETED':
+              // Profile already complete - fetch customer details
+              try {
+                console.log('Profile already complete, fetching customer details...');
+                const customerDetailsResponse = await apiService.getCustomerDetails();
+                console.log('Customer details API response (OTP):', customerDetailsResponse);
+                if (customerDetailsResponse.status === 200 && customerDetailsResponse.data) {
+                  console.log('Customer details fetched successfully (OTP):', customerDetailsResponse.data);
+                  // Update user with complete customer details
+                  updateUser(customerDetailsResponse.data);
+                  console.log('User updated with customer details (OTP)');
+                } else {
+                  console.log('Customer details API failed or no data (OTP):', customerDetailsResponse);
+                }
+              } catch (customerError) {
+                console.error('Error fetching customer details for completed profile:', customerError);
+                // Continue with the flow even if customer details fetch fails
+              }
               onSuccess?.();
               handleClose();
               break;
@@ -159,7 +176,9 @@ export function LoginModal({ open, onOpenChange, onSuccess, isEditMode = false }
         pincode: loginData.pincode,
       };
 
+      console.log('Submitting profile data:', profileData);
       const response = await apiService.updateProfile(profileData);
+      console.log('Profile update response:', response);
 
       if (response.status === 200) {
         const updatedUser = {
@@ -167,6 +186,25 @@ export function LoginModal({ open, onOpenChange, onSuccess, isEditMode = false }
           status: response.data?.[0]?.status || user?.status,
         };
         updateUser(updatedUser);
+        
+        // Fetch updated customer details after profile completion
+        try {
+          console.log('Profile updated successfully, fetching customer details...');
+          const customerDetailsResponse = await apiService.getCustomerDetails();
+          console.log('Customer details API response:', customerDetailsResponse);
+          if (customerDetailsResponse.status === 200 && customerDetailsResponse.data) {
+            console.log('Customer details fetched successfully:', customerDetailsResponse.data);
+            // Update user with complete customer details
+            updateUser(customerDetailsResponse.data);
+            console.log('User updated with customer details');
+          } else {
+            console.log('Customer details API failed or no data:', customerDetailsResponse);
+          }
+        } catch (customerError) {
+          console.error('Error fetching customer details after profile update:', customerError);
+          // Continue with the flow even if customer details fetch fails
+        }
+        
         onSuccess?.();
         handleClose();
       } else {

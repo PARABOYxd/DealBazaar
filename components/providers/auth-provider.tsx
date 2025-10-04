@@ -81,8 +81,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (response.data.refreshToken) {
               setCookie(null, REFRESH_TOKEN_KEY, response.data.refreshToken, { path: '/', maxAge: 30 * 24 * 60 * 60 });
             }
-            // After refreshing token, we might need to fetch user data if not already present
-            // For now, we'll assume user data is handled by login or subsequent API calls
+            // Try to fetch user data after successful token refresh
+            try {
+              const authStatusResponse = await apiService.getAuthStatus();
+              if (authStatusResponse.status === 200 && authStatusResponse.data) {
+                setUser(authStatusResponse.data);
+                localStorage.setItem(USER_DATA_KEY, JSON.stringify(authStatusResponse.data));
+              }
+            } catch (userDataError) {
+              console.warn('initializeAuth: Could not fetch user data after token refresh:', userDataError);
+              // User is still authenticated, just without user data
+            }
           } else {
             console.log('initializeAuth: Failed to refresh token, clearing auth data.');
             clearAuthData();
@@ -106,7 +115,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('login: Attempting to log in');
     localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
     
-    const newUser = { ...user, ...userData } as User;
+    // Create new user object from userData, don't merge with potentially null user state
+    const newUser = { ...userData } as User;
     localStorage.setItem(USER_DATA_KEY, JSON.stringify(newUser));
 
     // Store the isNew flag separately as requested by the user

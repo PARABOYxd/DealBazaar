@@ -1,4 +1,4 @@
-import { ApiResponse, Product, Category, PickupRequest, ScheduleRequest, Testimonial, FAQ, BlogPost, ContactInfo } from '@/types';
+import { ApiResponse, Product, Category, PickupRequest, ScheduleRequest, Testimonial, FAQ, BlogPost, ContactInfo, User } from '@/types';
 import { clearAuthData } from '@/components/providers/auth-provider';
 import { parseCookies, setCookie } from 'nookies';
 
@@ -50,14 +50,16 @@ class ApiService {
           } catch (refreshError) {
             console.error('Token refresh failed:', refreshError);
             clearAuthData();
-            if (typeof window !== 'undefined') {
+            // Only redirect if we're in the browser and not already on the signup page
+            if (typeof window !== 'undefined' && !window.location.pathname.includes('/signup')) {
               window.location.href = '/signup';
             }
             throw new Error('Unauthorized: Session expired.');
           }
         } else {
             clearAuthData();
-            if (typeof window !== 'undefined') {
+            // Only redirect if we're in the browser and not already on the signup page
+            if (typeof window !== 'undefined' && !window.location.pathname.includes('/signup')) {
               window.location.href = '/signup';
             }
             throw new Error('Unauthorized: No refresh token.');
@@ -309,6 +311,11 @@ class ApiService {
 
   async getAuthStatus(): Promise<ApiResponse<any>> {
     return this.fetchApi('/auth/status', { method: 'GET' });
+  }
+
+  async getCustomerDetails(): Promise<ApiResponse<User>> {
+    console.log('API: getCustomerDetails called - making request to /customer/details');
+    return this.fetchApi('/customer/details', { method: 'GET' });
   }
 }
 

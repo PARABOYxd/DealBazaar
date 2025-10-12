@@ -119,9 +119,9 @@ export function LoginModal({ open, onOpenChange, onSuccess, isEditMode = false }
         const response = await apiService.verifyOtp(loginData.mobileNumber, loginData.otp);
         if (response.status === 200 && response.data?.[0]?.accessToken) {
           const loginResponse = response.data[0]; // Get the full LoginResponse object
-          const { accessToken, status, refreshToken, ...restOfUser } = loginResponse; // Extract accessToken, status, and refreshToken
-          login(accessToken, { ...restOfUser, status, phoneNumber: loginData.mobileNumber }, refreshToken); // Pass refreshToken as third parameter
-          setUserStatus(status);
+          const { accessToken, status, ...restOfUser } = loginResponse; // Extract accessToken and status
+          login(accessToken, { ...restOfUser, status: status as UserState, phoneNumber: loginData.mobileNumber });
+          setUserStatus(status as UserState);
 
           switch (status) {
             case 'COMPLETED':

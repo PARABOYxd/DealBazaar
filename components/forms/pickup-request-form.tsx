@@ -123,28 +123,17 @@ export function PickupRequestForm({ whatsappNumber, setIsLoginOpen }: PickupRequ
     setSubmitError(null);
     
     try {
-      // Upload images first if any
-      let imageUrls: string[] = [];
-      if (images.length > 0) {
-        const uploadResponse = await apiService.uploadImages(images);
-        if (uploadResponse.status === 200) {
-          imageUrls = uploadResponse.data.urls;
-        }
-      }
-
-      const requestData: Omit<PickupRequest, 'id'> = {
+      const requestData: Omit<PickupRequest, 'id' | 'images'> = {
         ...data,
         customerName: user.name,
-        phone: user.phoneNumber || '', // Assuming phone number is in user object
-        // Address and email removed from form but backend requires address; use user data or fallback
+        phone: user.phoneNumber || '', 
         address: (user as any)?.address || '',
         email: (user as any)?.email || undefined,
-        city: 'N/A', // City is not in user object, to be discussed
-        pincode: 'N/A', // Pincode is not in user object, to be discussed
-        images: imageUrls,
+        city: 'N/A', 
+        pincode: 'N/A', 
       };
 
-      const response = await apiService.createPickupRequest(requestData);
+      const response = await apiService.createPickupRequestWithImages(requestData, images);
 
       if (response.status === 200) {
         setSubmitSuccess(true);

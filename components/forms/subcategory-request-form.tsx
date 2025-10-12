@@ -112,15 +112,7 @@ Notes: ${watch('notes')}` : '')
     setSubmitSuccess(false);
 
     try {
-      let imageUrls: string[] = [];
-      if (images.length > 0) {
-        const uploadResponse = await apiService.uploadImages(images);
-        if (uploadResponse.status === 200) {
-          imageUrls = uploadResponse.data.urls;
-        }
-      }
-
-      const requestData: ScheduleRequest = {
+      const requestData = {
         items: [
           {
             category: subcategory,
@@ -132,20 +124,19 @@ Notes: ${watch('notes')}` : '')
             desc: data.notes || 'No additional notes',
             quantity: data.quantity,
             condition: data.condition,
-            images: imageUrls,
           },
         ],
         preferredDate: data.preferredDate,
         preferredTime: data.preferredTime,
-        existingAddress: false, // Assuming no address selection in this form
-        addressId: undefined, // Assuming no address selection in this form
-        pincode: 'N/A', // Placeholder, as pincode is not in the form
-        alternateMobileNo: 'N/A', // Placeholder, as alternate mobile is not in the form
+        existingAddress: false, 
+        addressId: undefined, 
+        pincode: 'N/A', 
+        alternateMobileNo: 'N/A', 
         additionalNotes: data.notes,
         userPrice: data.sellingPrice,
       };
 
-      const response = await apiService.createScheduleRequest(requestData);
+      const response = await apiService.createScheduleRequestWithImages(requestData, images);
 
       if (response.status === 200) {
         setSubmitSuccess(true);
